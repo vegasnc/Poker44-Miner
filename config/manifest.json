@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "open_source": true,
+  "repo_url": "https://github.com/yourusername/poker44-miner",
+  "repo_commit": "your_git_commit_hash",
+  "model_name": "poker44-bot-detector",
+  "model_version": "1.0.0",
+  "framework": "lightgbm",
+  "framework_version": "4.5.0",
+  "license": "MIT",
+  "training_data_statement": "Trained on Poker44 public benchmark releases from 2026-06-01 to 2026-06-24",
+  "training_data_sources": [
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=YYYY-MM-DD"
+  ],
+  "private_data_attestation": "No private or proprietary data used in training",
+  "data_attestation": "All training data is from official Poker44 public benchmark",
+  "artifact_url": "https://github.com/yourusername/poker44-miner/releases/v1.0.0/model.joblib",
+  "artifact_sha256": "sha256_hash_of_model_file",
+  "model_card_url": "https://github.com/yourusername/poker44-miner/blob/main/model_card.md",
+  "inference_mode": "batch",
+  "implementation_files": [
+    "src/inference/predictor.py",
+    "src/inference/pipeline.py",
+    "src/features/engineering.py",
+    "src/models/baseline.py"
+  ],
+  "implementation_sha256": "sha256_hash_of_implementation",
+  "notes": "Baseline LightGBM model with engineered behavioral features."
+}

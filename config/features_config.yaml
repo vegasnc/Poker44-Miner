@@ -1,0 +1,19 @@
+action_patterns:
+  streets: ["preflop", "flop", "turn", "river"]
+  actions: ["fold", "check", "call", "bet", "raise", "allin"]
+
+bet_sizing:
+  use_pot_relative: true
+  use_big_blind_normalized: true
+  min_amount: 0.0
+
+positions:
+  early: ["utg", "utg1", "utg2", "mp"]
+  middle: ["mp1", "mp2", "hj", "lojack"]
+  late: ["co", "button", "btn"]
+  blinds: ["sb", "bb", "small_blind", "big_blind"]
+
+statistical:
+  include_entropy: true
+  include_showdown: true
+  include_win_rate: true

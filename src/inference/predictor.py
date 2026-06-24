@@ -1,0 +1,54 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+from src.features.engineering import FeaturePipeline
+from src.models.baseline import LightGBMBotDetector
+from src.utils.helpers import clamp_probability, load_json, load_yaml
+
+
+class BotRiskPredictor:
+    def __init__(
+        self,
+        model_path: str | Path = "models/saved/model.joblib",
+        feature_names_path: str | Path = "models/saved/feature_names.json",
+        config_path: str | Path = "config/config.yaml",
+        fallback_score: float = 0.5,
+    ) -> None:
+        self.model_path = Path(model_path)
+        self.feature_names_path = Path(feature_names_path)
+        self.config_path = Path(config_path)
+        self.config = load_yaml(self.config_path, default={})
+        self.fallback_score = float(fallback_score)
+        self.model: LightGBMBotDetector | None = None
+        self.features: FeaturePipeline | None = None
+
+    def load(self) -> "BotRiskPredictor":
+        if not self.model_path.exists() or not self.feature_names_path.exists():
+            raise FileNotFoundError(
+                f"Missing model artifacts: {self.model_path} and/or {self.feature_names_path}. "
+                "Run scripts/train_model.py first."
+            )
+        self.model = LightGBMBotDetector.load(self.model_path)
+        self.features = FeaturePipeline.load(self.feature_names_path, config=self.config)
+        return self
+
+    def predict_chunk(self, chunk_group: Any) -> float:
+        return self.predict_chunks([chunk_group])[0]
+
+    def predict_chunks(self, chunk_groups: list[Any]) -> list[float]:
+        if not chunk_groups:
+            return []
+        if self.model is None or self.features is None:
+            self.load()
+        assert self.model is not None and self.features is not None
+        try:
+            matrix = self.features.transform(chunk_groups)
+            scores = self.model.predict_proba(matrix)
+            return [clamp_probability(float(score)) for score in scores]
+        except Exception:
+            return [clamp_probability(self.fallback_score)] * len(chunk_groups)
+
+    def manifest(self, manifest_path: str | Path = "config/manifest.json") -> dict[str, Any]:
+        return load_json(manifest_path, default={}) or {}

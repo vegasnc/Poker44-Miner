@@ -1,0 +1,47 @@
+model:
+  type: "lightgbm"
+  params:
+    objective: "binary"
+    metric: "auc"
+    boosting_type: "gbdt"
+    num_leaves: 31
+    learning_rate: 0.05
+    feature_fraction: 0.9
+    bagging_fraction: 0.8
+    bagging_freq: 5
+    verbose: -1
+    n_estimators: 1000
+    early_stopping_rounds: 50
+
+features:
+  action_patterns: true
+  bet_sizing: true
+  aggression_metrics: true
+  positional_play: true
+  timing_patterns: false
+  consistency_metrics: true
+  statistical_features: true
+
+training:
+  test_size: 0.2
+  validation_size: 0.2
+  random_seed: 42
+  cross_validation_folds: 5
+  use_multiple_releases: true
+  min_releases: 3
+
+data:
+  base_url: "https://api.poker44.net/api/v1/benchmark"
+  cache_dir: "data/cache"
+  max_chunks_per_day: 100
+  start_date: "2026-06-01"
+  end_date: "2026-06-24"
+
+inference:
+  batch_size: 10
+  timeout_seconds: 30
+  max_retries: 3
+  model_path: "models/saved/model.joblib"
+  feature_names_path: "models/saved/feature_names.json"
+  fallback_score: 0.5
+  prediction_threshold: 0.5
