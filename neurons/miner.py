@@ -19,6 +19,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from miners.custom_miner import Poker44BotDetectionMiner
 from src.utils.helpers import load_json
+from src.utils.synapse_logger import SynapseTracker, configure as configure_synapse_logger
 
 LOGGER = logging.getLogger(__name__)
 LOG_FILE_HANDLE: Any = None
@@ -95,7 +96,9 @@ def configure_project_logging() -> Path:
 
     sys.excepthook = log_uncaught_exception
     logging.captureWarnings(True)
+    configure_synapse_logger(log_dir)
     LOGGER.info("Project log recording enabled at %s", log_file)
+    LOGGER.info("Synapse log recording enabled at %s", log_dir / "synapses.log")
     return log_file
 
 
@@ -170,30 +173,53 @@ class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
         self._log_manifest_startup(repo_root)
 
     async def forward(self, synapse: DetectionSynapse) -> DetectionSynapse:
-        """Score each received chunk group independently."""
+        """Score each received chunk group independently and log the full lifecycle."""
+        tracker = SynapseTracker(synapse)
         chunks = getattr(synapse, "chunks", None) or []
-        result = self.detector.pipeline.score_synapse_chunks(chunks)
-        synapse.risk_scores = result["risk_scores"]
-        synapse.predictions = result["predictions"]
-        synapse.model_manifest = dict(self.model_manifest)
-        self._log("info", f"Scored {len(chunks)} chunks with model-backed risks.")
+        tracker.log_received(len(chunks))
+        try:
+            result = self.detector.pipeline.score_synapse_chunks(chunks)
+            risk_scores: list[float] = result["risk_scores"]
+            predictions: list[bool] = result["predictions"]
+            latency_ms: float = result.get("inference_latency_ms", 0.0)
+            tracker.log_inference(risk_scores, predictions, latency_ms)
+            synapse.risk_scores = risk_scores
+            synapse.predictions = predictions
+            synapse.model_manifest = dict(self.model_manifest)
+            tracker.log_response(risk_scores, predictions)
+        except Exception as exc:
+            tracker.log_error(exc)
+            LOGGER.exception("forward() failed; returning neutral scores")
+            n = len(chunks)
+            synapse.risk_scores = [0.5] * n
+            synapse.predictions = [False] * n
+            synapse.model_manifest = dict(self.model_manifest)
         return synapse
 
     async def blacklist(self, synapse: DetectionSynapse) -> Tuple[bool, str]:
-        """Use the official base miner blacklist policy when available."""
+        """Use the official base miner blacklist policy and log the decision."""
+        tracker = SynapseTracker(synapse)
         if hasattr(self, "common_blacklist"):
-            return self.common_blacklist(synapse)  # type: ignore[attr-defined]
-        return False, "Poker44 runtime not available; local fallback accepts request."
+            blocked, reason = self.common_blacklist(synapse)  # type: ignore[attr-defined]
+        else:
+            blocked, reason = False, "Poker44 runtime not available; local fallback accepts request."
+        tracker.log_blacklist(blocked, reason)
+        return blocked, reason
 
     async def priority(self, synapse: DetectionSynapse) -> float:
-        """Use the official base miner caller priority when available."""
+        """Use the official base miner caller priority and log the score."""
+        tracker = SynapseTracker(synapse)
         if hasattr(self, "caller_priority"):
-            return self.caller_priority(synapse)  # type: ignore[attr-defined]
-        hotkey = getattr(getattr(synapse, "dendrite", None), "hotkey", None)
-        if hotkey and hasattr(self, "metagraph") and hotkey in self.metagraph.hotkeys:
-            uid = self.metagraph.hotkeys.index(hotkey)
-            return float(self.metagraph.S[uid])
-        return 0.0
+            score = self.caller_priority(synapse)  # type: ignore[attr-defined]
+        else:
+            hotkey = getattr(getattr(synapse, "dendrite", None), "hotkey", None)
+            if hotkey and hasattr(self, "metagraph") and hotkey in self.metagraph.hotkeys:
+                uid = self.metagraph.hotkeys.index(hotkey)
+                score = float(self.metagraph.S[uid])
+            else:
+                score = 0.0
+        tracker.log_priority(score)
+        return score
 
     def _init_direct_bittensor(self, config: Any = None) -> None:
         self.config = config or _build_direct_config()

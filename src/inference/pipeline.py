@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Any
 
 from src.inference.predictor import BotRiskPredictor
@@ -11,9 +12,12 @@ class InferencePipeline:
         self.threshold = threshold
 
     def score_synapse_chunks(self, chunks: list[Any]) -> dict[str, Any]:
+        t0 = time.perf_counter()
         scores = self.predictor.predict_chunks(chunks)
+        latency_ms = (time.perf_counter() - t0) * 1000
         return {
             "risk_scores": scores,
             "predictions": [score >= self.threshold for score in scores],
             "model_manifest": self.predictor.manifest(),
+            "inference_latency_ms": latency_ms,
         }
