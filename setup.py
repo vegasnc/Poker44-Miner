@@ -5,7 +5,7 @@ setup(
     name="poker44-bot-detector",
     version="1.0.0",
     description="LightGBM baseline miner for Poker44 Subnet 126 bot detection.",
-    packages=find_packages(include=["src", "src.*", "miners", "miners.*"]),
+    packages=find_packages(include=["src", "src.*", "miners", "miners.*", "neurons", "neurons.*"]),
     install_requires=[
         "requests>=2.31.0",
         "PyYAML>=6.0.1",

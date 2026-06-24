@@ -1,4 +1,5 @@
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -8,5 +9,7 @@ __pycache__/
 data/cache/*.json
 models/saved/*.joblib
 models/saved/*.json
+logs/*.log
 !data/cache/.gitkeep
 !models/saved/.gitkeep
+!logs/.gitkeep

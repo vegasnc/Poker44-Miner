@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 from src.utils.helpers import ensure_dir, load_json, save_json
 
@@ -110,10 +113,13 @@ def iter_examples_from_records(records: list[dict[str, Any]]) -> list[DatasetExa
         chunk_groups = record.get("chunks") or []
         labels = record.get("groundTruth") or record.get("ground_truth") or []
         if len(chunk_groups) != len(labels):
-            raise ValueError(
-                f"Label count mismatch for {record.get('chunkId')}: "
-                f"{len(chunk_groups)} chunks vs {len(labels)} labels"
+            logger.warning(
+                "Skipping record %s: label count mismatch (%d chunks vs %d labels)",
+                record.get("chunkId"),
+                len(chunk_groups),
+                len(labels),
             )
+            continue
         for index, chunk_group in enumerate(chunk_groups):
             examples.append(
                 DatasetExample(

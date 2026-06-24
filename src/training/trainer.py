@@ -9,6 +9,7 @@ import numpy as np
 from src.data.loader import BenchmarkClient, DatasetExample, load_benchmark_examples
 from src.features.engineering import FeaturePipeline
 from src.models.baseline import LightGBMBotDetector
+from src.models.ensemble import StackedEnsemble
 from src.training.evaluator import summarize_evaluation
 from src.utils.helpers import load_json, load_yaml, save_json, sha256_file, sha256_files
 
@@ -46,23 +47,30 @@ class TrainingPipeline:
         x_test = feature_pipeline.transform([example.chunk for example in test_examples])
         y_test = np.asarray([example.label for example in test_examples], dtype=int)
 
-        model = LightGBMBotDetector(
-            params=model_config.get("params", {}),
-            random_seed=int(training_config.get("random_seed", 42)),
-        )
+        seed = int(training_config.get("random_seed", 42))
+        model = _build_model(model_config, seed)
         model.fit(x_train, y_train, x_valid, y_valid)
         test_scores = model.predict_proba(x_test)
         metrics = summarize_evaluation(y_test, test_scores, [_metadata(example) for example in test_examples])
+
+        # Final production artifact retrained on all available data.
+        final_feature_pipeline = FeaturePipeline(config=self.config)
+        x_all = final_feature_pipeline.fit_transform([example.chunk for example in examples])
+        y_all = np.asarray([example.label for example in examples], dtype=int)
+        final_model = _build_model(model_config, seed)
+        final_model.fit(x_all, y_all)
 
         model_path = Path(inference_config.get("model_path", "models/saved/model.joblib"))
         feature_names_path = Path(inference_config.get("feature_names_path", "models/saved/feature_names.json"))
         metrics_path = model_path.parent / "metrics.json"
         importances_path = model_path.parent / "feature_importance.json"
 
-        model.save(model_path)
-        feature_pipeline.save_feature_names(feature_names_path)
+        final_model.save(model_path)
+        final_feature_pipeline.save_feature_names(feature_names_path)
         save_json(metrics_path, metrics)
-        save_json(importances_path, model.feature_importance(feature_pipeline.feature_names or []))
+        feat_names = final_feature_pipeline.feature_names or []
+        if hasattr(final_model, "feature_importance"):
+            save_json(importances_path, final_model.feature_importance(feat_names))
         self._update_manifest(model_path, dates)
 
         return {
@@ -76,19 +84,30 @@ class TrainingPipeline:
         }
 
     def _latest_dates(self, client: BenchmarkClient, minimum: int) -> list[str]:
-        releases = client.releases(limit=max(minimum, 3))
+        data_config = self.config.get("data", {})
+        start_date = data_config.get("start_date")
+        end_date = data_config.get("end_date")
+        releases = client.releases(limit=120)
         dates = [release["sourceDate"] for release in releases if release.get("sourceDate")]
+        if start_date:
+            dates = [d for d in dates if d >= start_date]
+        if end_date:
+            dates = [d for d in dates if d <= end_date]
+        dates = sorted(dates)
         if len(dates) < minimum:
             raise ValueError(f"Need at least {minimum} benchmark releases, found {len(dates)}")
-        return sorted(dates[:minimum])
+        return dates
 
     def _update_manifest(self, model_path: Path, dates: list[str]) -> None:
         manifest = load_json(self.manifest_path, default={})
         implementation_files = manifest.get("implementation_files") or [
+            "neurons/miner.py",
+            "miners/custom_miner.py",
             "src/inference/predictor.py",
             "src/inference/pipeline.py",
             "src/features/engineering.py",
             "src/models/baseline.py",
+            "src/models/ensemble.py",
         ]
         manifest["repo_commit"] = _git_commit()
         manifest["artifact_sha256"] = sha256_file(model_path)
@@ -100,6 +119,23 @@ class TrainingPipeline:
             f"https://api.poker44.net/api/v1/benchmark/chunks?sourceDate={date}" for date in dates
         ]
         save_json(self.manifest_path, manifest)
+
+
+def _build_model(model_config: dict[str, Any], seed: int) -> Any:
+    model_type = model_config.get("type", "lightgbm")
+    if model_type == "stacked_ensemble":
+        ensemble_cfg = model_config.get("ensemble", {})
+        return StackedEnsemble(
+            lgbm_params=model_config.get("lgbm_params", {}),
+            xgb_params=model_config.get("xgb_params", {}),
+            n_folds=int(ensemble_cfg.get("n_folds", 5)),
+            random_seed=seed,
+            calibrator_blend=float(ensemble_cfg.get("calibrator_blend", 0.7)),
+        )
+    return LightGBMBotDetector(
+        params=model_config.get("params", {}),
+        random_seed=seed,
+    )
 
 
 def split_by_release(
@@ -119,7 +155,7 @@ def split_by_release(
         test = [example for example in examples if example.source_date == dates[1]]
         return train, [], test
     midpoint = max(1, int(len(examples) * 0.8))
-    return examples[:midpoint], [], examples[midpoint:] or examples[:]
+    return examples[:midpoint], [], examples[midpoint:]
 
 
 def _metadata(example: DatasetExample) -> dict[str, Any]:

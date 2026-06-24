@@ -86,21 +86,23 @@ def extract_behavioral_features(chunk_group: list[dict[str, Any]]) -> dict[str, 
 def extract_bet_sizing_features(chunk_group: list[dict[str, Any]]) -> dict[str, float]:
     actions = [action for hand in chunk_group for action in hand.get("actions", [])]
     bet_actions = [action for action in actions if action.get("action_type") in {"bet", "raise", "call", "allin"}]
-    amounts = [_effective_amount(action) for action in bet_actions]
+    # Chip amounts (raw): use amount/raise_to/call_to but NOT normalized_amount_bb (different unit).
+    chip_amounts = [_chip_amount(action) for action in bet_actions]
     pot_ratios = [
-        safe_div(_effective_amount(action), numeric(action.get("pot_before")))
+        safe_div(_chip_amount(action), numeric(action.get("pot_before")))
         for action in bet_actions
         if numeric(action.get("pot_before")) > 0
     ]
+    # BB-normalised amounts: use the dedicated field only.
     bb_amounts = [numeric(action.get("normalized_amount_bb")) for action in bet_actions if numeric(action.get("normalized_amount_bb")) > 0]
 
-    features = _distribution_features("bet_amount", amounts)
+    features = _distribution_features("bet_amount", chip_amounts)
     features.update(_distribution_features("bet_pot_ratio", pot_ratios))
     features.update(_distribution_features("bet_amount_bb", bb_amounts))
 
     for street in STREETS:
-        street_amounts = [_effective_amount(action) for action in bet_actions if action.get("street") == street]
-        features.update(_distribution_features(f"{street}_bet_amount", street_amounts, compact=True))
+        street_chip = [_chip_amount(action) for action in bet_actions if action.get("street") == street]
+        features.update(_distribution_features(f"{street}_bet_amount", street_chip, compact=True))
 
     return features
 
@@ -117,13 +119,18 @@ def extract_timing_features(chunk_group: list[dict[str, Any]]) -> dict[str, floa
     return _distribution_features("decision_time", times)
 
 
-def _effective_amount(action: dict[str, Any]) -> float:
+def _chip_amount(action: dict[str, Any]) -> float:
+    """Bet size in chips (raw currency units), excluding BB-normalised field."""
     return max(
         numeric(action.get("amount")),
         numeric(action.get("raise_to")),
         numeric(action.get("call_to")),
-        numeric(action.get("normalized_amount_bb")),
     )
+
+
+def _effective_amount(action: dict[str, Any]) -> float:
+    """Bet size in chips. Kept for backward compatibility with callers that don't use BB units."""
+    return _chip_amount(action)
 
 
 def _distribution_features(prefix: str, values: list[float], compact: bool = False) -> dict[str, float]:
@@ -145,6 +152,8 @@ def _distribution_features(prefix: str, values: list[float], compact: bool = Fal
         base.update(
             {
                 "median": float(np.median(array)),
+                "p25": float(np.percentile(array, 25)),
+                "p75": float(np.percentile(array, 75)),
                 "p90": float(np.percentile(array, 90)),
                 "cv": safe_div(float(np.std(array)), abs(float(np.mean(array)))),
             }

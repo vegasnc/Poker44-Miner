@@ -12,6 +12,8 @@ def test_feature_pipeline_extracts_expected_core_features(sample_chunk_group):
     assert matrix.loc[0, "raise_rate"] > 0.0
     assert matrix.loc[0, "aggression_frequency"] > 0.0
     assert matrix.loc[0, "vpip"] == 1.0
+    assert matrix.loc[0, "line_cbet_rate"] == 1.0
+    assert matrix.loc[0, "bet_bucket_half_pot_rate"] > 0.0
     assert list(matrix.columns) == sorted(matrix.columns)
 
 

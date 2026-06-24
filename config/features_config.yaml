@@ -17,3 +17,9 @@ statistical:
   include_entropy: true
   include_showdown: true
   include_win_rate: true
+
+advanced_patterns:
+  action_ngrams: true
+  per_actor_consistency: true
+  betting_geometry: true
+  poker_lines: true

@@ -10,7 +10,7 @@ Scores are probabilities in `[0, 1]`: values closer to `1` are more bot-like and
 - Robust feature pipeline for action patterns, bet sizing, aggression, position, consistency, showdown, VPIP, PFR, 3-bet, and steal metrics.
 - LightGBM baseline model with a local sklearn fallback for development environments.
 - Date-aware training split to reduce overfitting to a single release.
-- Batch inference pipeline and Poker44 miner adapter.
+- Batch inference pipeline, local miner adapter, and production `neurons/miner.py` entrypoint.
 - Model manifest template and post-training hash updates.
 - Unit tests for data parsing, features, model scoring, and miner integration.
 
@@ -68,7 +68,103 @@ Pass a JSON list of chunk groups, or an object with a top-level `chunks` field:
 python scripts/run_miner.py --chunks-json sample_chunks.json
 ```
 
-## Miner Integration
+## Run As A Live Poker44 Miner
+
+The production entrypoint is `neurons/miner.py`, aligned with the official Poker44 subnet [`neurons` folder](https://github.com/Poker44/Poker44-subnet/tree/main/neurons).
+
+First install the official Poker44 subnet runtime so `poker44.base.miner`, `poker44.validator.synapse`, and `bittensor` are importable. Then train or place model artifacts at `models/saved/model.joblib` and `models/saved/feature_names.json`.
+
+Direct run:
+
+```bash
+python neurons/miner.py \
+  --netuid 126 \
+  --wallet.name "$WALLET_NAME" \
+  --wallet.hotkey "$HOTKEY" \
+  --subtensor.network finney \
+  --axon.port "$AXON_PORT" \
+  --blacklist.allowed_validator_hotkeys $ALLOWED_VALIDATOR_HOTKEYS
+```
+
+Or use the helper:
+
+```bash
+WALLET_NAME=my_cold \
+HOTKEY=my_poker44_hotkey \
+AXON_PORT=8091 \
+ALLOWED_VALIDATOR_HOTKEYS="validator_hotkey_1 validator_hotkey_2" \
+bash scripts/run_live_miner.sh
+```
+
+`neurons/miner.py` receives `DetectionSynapse(chunks=...)`, calls the local model-backed predictor, and returns `risk_scores`, `predictions`, and `model_manifest`.
+
+## Run With PM2
+
+The project includes `ecosystem.config.js` for running the miner as a PM2 service. Runtime values are loaded from `.env`.
+
+Current `.env` variables:
+
+```bash
+NETUID=126
+WALLET_NAME=pierre
+HOTKEY=pierre1hotkey
+SUBTENSOR_NETWORK=finney
+AXON_PORT=7091
+AXON_EXTERNAL_IP=
+AXON_EXTERNAL_PORT=
+ALLOWED_VALIDATOR_HOTKEYS=
+POKER44_LOG_DIR=logs
+POKER44_LOG_LEVEL=INFO
+POKER44_LOG_TEE_STDIO=1
+```
+
+```bash
+pm2 start ecosystem.config.js
+pm2 logs poker44-miner
+pm2 status
+```
+
+You can also override settings for one PM2 start by setting shell variables:
+
+```bash
+WALLET_NAME=pierre \
+HOTKEY=pierre1hotkey \
+AXON_PORT=7091 \
+SUBTENSOR_NETWORK=finney \
+pm2 start ecosystem.config.js
+```
+
+For boot persistence:
+
+```bash
+pm2 save
+pm2 startup
+```
+
+Common operations:
+
+```bash
+pm2 restart poker44-miner
+pm2 stop poker44-miner
+pm2 delete poker44-miner
+```
+
+Project logs are recorded under `logs/`:
+
+```bash
+logs/poker44-miner.log      # Python miner logger, uncaught exceptions, mirrored stdout/stderr
+logs/poker44-miner.out.log  # PM2 stdout capture
+logs/poker44-miner.err.log  # PM2 stderr capture
+```
+
+Watch all miner logs:
+
+```bash
+pm2 logs poker44-miner
+tail -f logs/poker44-miner.log
+```
+
+## Library Integration
 
 Import `Poker44BotDetectionMiner` from `miners/custom_miner.py` and call `forward(synapse)`. The adapter accepts either a `DetectionSynapse`-like object with a `chunks` attribute or a dictionary with a `chunks` key.
 

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src.data.preprocessor import normalize_chunk_group
+from src.features.advanced import extract_advanced_features
 from src.features.behavioral import (
     extract_behavioral_features,
     extract_bet_sizing_features,
@@ -34,6 +35,8 @@ class FeaturePipeline:
             features.update(extract_statistical_features(normalized))
         if enabled.get("timing_patterns", False):
             features.update(extract_timing_features(normalized))
+        if enabled.get("advanced_patterns", True):
+            features.update(extract_advanced_features(normalized))
 
         if not features:
             features["hand_count"] = float(len(normalized))

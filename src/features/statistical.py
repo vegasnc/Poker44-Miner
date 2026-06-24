@@ -28,13 +28,24 @@ def extract_statistical_features(chunk_group: list[dict[str, Any]]) -> dict[str,
     late_actions: Counter[str] = Counter()
     early_actions: Counter[str] = Counter()
 
+    # Hero-specific counters: actions by the target seat only.
+    hero_actions_total = 0
+    hero_aggressive = 0
+    hero_folds = 0
+    hero_calls = 0
+    hero_vpip_hands = 0
+    hero_pfr_hands = 0
+    hero_showdowns = 0
+    hero_wins = 0
+    hero_hands_seen = 0
+
     for hand in chunk_group:
         players = hand.get("players", [])
         actions = hand.get("actions", [])
         player_counts.append(len(players))
         street_counts.append(len(hand.get("streets", [])) or _observed_street_count(actions))
         starting_stacks.extend(_starting_stacks(players))
-        hero_seat = _hero_seat(players)
+        hero_seat = _hero_seat(players) or _hero_seat_from_metadata(hand)
         if hero_seat is not None:
             hero_seats.append(float(hero_seat))
 
@@ -55,6 +66,25 @@ def extract_statistical_features(chunk_group: list[dict[str, Any]]) -> dict[str,
         pot_growth_values.append(_pot_growth(actions))
         _collect_position_actions(players, actions, position_actions, blind_actions, late_actions, early_actions)
 
+        # Hero-specific stats
+        if hero_seat is not None:
+            hero_acts = [a for a in actions if a.get("actor_seat") == hero_seat]
+            if hero_acts:
+                hero_hands_seen += 1
+                hero_actions_total += len(hero_acts)
+                hero_aggressive += sum(1 for a in hero_acts if a.get("action_type") in {"bet", "raise", "allin"})
+                hero_folds += sum(1 for a in hero_acts if a.get("action_type") == "fold")
+                hero_calls += sum(1 for a in hero_acts if a.get("action_type") == "call")
+                hero_pre = [a for a in hero_acts if a.get("street") == "preflop"]
+                if any(a.get("action_type") in {"call", "bet", "raise", "allin"} for a in hero_pre):
+                    hero_vpip_hands += 1
+                if any(a.get("action_type") in {"raise", "allin"} for a in hero_pre):
+                    hero_pfr_hands += 1
+            if _went_to_showdown(hand):
+                hero_showdowns += 1
+            if _won_hand(hand):
+                hero_wins += 1
+
     features = {
         "mean_player_count": _mean(player_counts),
         "std_player_count": _std(player_counts),
@@ -71,6 +101,16 @@ def extract_statistical_features(chunk_group: list[dict[str, Any]]) -> dict[str,
         "steal_attempt_frequency": safe_div(steal_attempt_hands, hand_count),
         "went_to_showdown_percentage": safe_div(showdown_hands, hand_count),
         "win_rate": safe_div(winning_hands, hand_count),
+        # Hero (target player) specific features
+        "hero_aggression_rate": safe_div(hero_aggressive, hero_actions_total),
+        "hero_fold_rate": safe_div(hero_folds, hero_actions_total),
+        "hero_call_rate": safe_div(hero_calls, hero_actions_total),
+        "hero_vpip": safe_div(hero_vpip_hands, hero_hands_seen),
+        "hero_pfr": safe_div(hero_pfr_hands, hero_hands_seen),
+        "hero_showdown_rate": safe_div(hero_showdowns, hand_count),
+        "hero_win_rate": safe_div(hero_wins, hand_count),
+        "hero_actions_per_hand": safe_div(hero_actions_total, hero_hands_seen),
+        "hero_participation_rate": safe_div(hero_hands_seen, hand_count),
     }
 
     features.update(_position_summary("blind", blind_actions))
@@ -98,6 +138,17 @@ def _hero_seat(players: list[dict[str, Any]]) -> int | None:
             except (TypeError, ValueError):
                 return None
     return None
+
+
+def _hero_seat_from_metadata(hand: dict[str, Any]) -> int | None:
+    meta = hand.get("metadata", {})
+    if not isinstance(meta, dict):
+        return None
+    seat = meta.get("hero_seat")
+    try:
+        return int(seat) if seat is not None else None
+    except (TypeError, ValueError):
+        return None
 
 
 def _observed_street_count(actions: list[dict[str, Any]]) -> int:
@@ -139,7 +190,7 @@ def _won_hand(hand: dict[str, Any]) -> bool:
         if key in outcome:
             return bool(outcome[key])
     winners = outcome.get("winners") or outcome.get("winner_seats") or []
-    hero = _hero_seat(hand.get("players", []))
+    hero = _hero_seat(hand.get("players", [])) or _hero_seat_from_metadata(hand)
     return hero is not None and hero in winners
 
 

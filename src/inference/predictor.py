@@ -3,8 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import joblib
+
 from src.features.engineering import FeaturePipeline
-from src.models.baseline import LightGBMBotDetector
 from src.utils.helpers import clamp_probability, load_json, load_yaml
 
 
@@ -21,7 +22,7 @@ class BotRiskPredictor:
         self.config_path = Path(config_path)
         self.config = load_yaml(self.config_path, default={})
         self.fallback_score = float(fallback_score)
-        self.model: LightGBMBotDetector | None = None
+        self.model: Any | None = None
         self.features: FeaturePipeline | None = None
 
     def load(self) -> "BotRiskPredictor":
@@ -30,7 +31,16 @@ class BotRiskPredictor:
                 f"Missing model artifacts: {self.model_path} and/or {self.feature_names_path}. "
                 "Run scripts/train_model.py first."
             )
-        self.model = LightGBMBotDetector.load(self.model_path)
+        artifact = joblib.load(self.model_path)
+        # Support both StackedEnsemble (direct pickle) and LightGBMBotDetector (dict wrapper)
+        if isinstance(artifact, dict):
+            from src.models.baseline import LightGBMBotDetector
+            detector = LightGBMBotDetector()
+            detector.model = artifact["model"]
+            detector.backend = artifact.get("backend", "lightgbm")
+            self.model = detector
+        else:
+            self.model = artifact
         self.features = FeaturePipeline.load(self.feature_names_path, config=self.config)
         return self
 
