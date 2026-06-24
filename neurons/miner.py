@@ -96,9 +96,8 @@ def configure_project_logging() -> Path:
 
     sys.excepthook = log_uncaught_exception
     logging.captureWarnings(True)
-    configure_synapse_logger(log_dir)
+    configure_synapse_logger()
     LOGGER.info("Project log recording enabled at %s", log_file)
-    LOGGER.info("Synapse log recording enabled at %s", log_dir / "synapses.log")
     return log_file
 
 
