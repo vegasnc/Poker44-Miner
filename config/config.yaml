@@ -28,9 +28,30 @@ model:
     reg_alpha: 0.1
     reg_lambda: 2.0
     early_stopping_rounds: 50
+  catboost_params:
+    iterations: 400
+    depth: 6
+    learning_rate: 0.05
+    l2_leaf_reg: 3.0
+    border_count: 64
+    random_strength: 1.0
+    bagging_temperature: 0.5
+    early_stopping_rounds: 50
+  set_transformer_params:
+    hidden_dim: 32
+    num_heads: 4
+    num_sab: 2
+    dropout: 0.4
+    lr: 0.003
+    epochs: 80
+    batch_size: 32
+    patience: 15
   ensemble:
     n_folds: 5
     calibrator_blend: 0.7
+    human_weight: 2.0
+    target_fpr: 0.04
+    use_set_transformer: true
 
 features:
   action_patterns: true
@@ -41,6 +62,10 @@ features:
   consistency_metrics: true
   statistical_features: true
   advanced_patterns: true
+  per_hand_aggregation: true
+  bot_tell_features: true
+  advanced_tell_features: true
+  gto_tell_features: true
 
 training:
   test_size: 0.2

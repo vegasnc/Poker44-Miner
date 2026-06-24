@@ -41,10 +41,6 @@ module.exports = {
         process.env.AXON_EXTERNAL_PORT
           ? ["--axon.external_port", process.env.AXON_EXTERNAL_PORT]
           : []
-      ).concat(
-        process.env.ALLOWED_VALIDATOR_HOTKEYS
-          ? ["--blacklist.allowed_validator_hotkeys"].concat(process.env.ALLOWED_VALIDATOR_HOTKEYS.split(/\s+/).filter(Boolean))
-          : []
       ),
       env: Object.assign({}, process.env, {
         PYTHONUNBUFFERED: "1",

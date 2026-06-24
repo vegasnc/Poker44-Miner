@@ -1,0 +1,138 @@
+{
+  "contract_checks": {
+    "errors": [],
+    "score_count_matches_ground_truth": true,
+    "scores_in_0_1": true
+  },
+  "dates": [
+    "2026-06-13",
+    "2026-06-14",
+    "2026-06-15",
+    "2026-06-16",
+    "2026-06-17",
+    "2026-06-18",
+    "2026-06-19",
+    "2026-06-20",
+    "2026-06-21",
+    "2026-06-22",
+    "2026-06-23",
+    "2026-06-24"
+  ],
+  "evaluation_type": "current_saved_artifact_on_loaded_public_releases_in_sample_for_training_dates",
+  "overall": {
+    "average_precision": 1.0,
+    "brier_score": 0.0003238487301857546,
+    "log_loss": 0.01533947240093051,
+    "roc_auc": 1.0
+  },
+  "per_release": {
+    "2026-06-13": {
+      "average_precision": 1.0,
+      "brier_score": 0.00042515620856366606,
+      "example_count": 12,
+      "label_count": 12,
+      "log_loss": 0.019766849626457594,
+      "roc_auc": 1.0,
+      "score_count": 12
+    },
+    "2026-06-14": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.0008011594759997259,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.022088263053180252,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-15": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.00021696634654230822,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.012653766227666867,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-16": {
+      "average_precision": 1.0,
+      "brier_score": 0.00024226337559850097,
+      "example_count": 16,
+      "label_count": 16,
+      "log_loss": 0.012952170917535201,
+      "roc_auc": 1.0,
+      "score_count": 16
+    },
+    "2026-06-17": {
+      "average_precision": 1.0,
+      "brier_score": 0.00046929737437941313,
+      "example_count": 12,
+      "label_count": 12,
+      "log_loss": 0.019700579262630313,
+      "roc_auc": 1.0,
+      "score_count": 12
+    },
+    "2026-06-18": {
+      "average_precision": 1.0,
+      "brier_score": 0.00010838592450749114,
+      "example_count": 16,
+      "label_count": 16,
+      "log_loss": 0.010037577018014849,
+      "roc_auc": 1.0,
+      "score_count": 16
+    },
+    "2026-06-19": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.00021742919089466853,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.013611911105090154,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-20": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.00025259245370206203,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.01356272334126536,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-21": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.00018261084463921606,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.011816803012386337,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-22": {
+      "average_precision": 1.0,
+      "brier_score": 0.00027971096514257124,
+      "example_count": 12,
+      "label_count": 12,
+      "log_loss": 0.01566904505794578,
+      "roc_auc": 1.0,
+      "score_count": 12
+    },
+    "2026-06-23": {
+      "average_precision": 0.9999999999999998,
+      "brier_score": 0.00027898187399021666,
+      "example_count": 14,
+      "label_count": 14,
+      "log_loss": 0.014870656991974818,
+      "roc_auc": 1.0,
+      "score_count": 14
+    },
+    "2026-06-24": {
+      "average_precision": 1.0,
+      "brier_score": 0.0005095388142487754,
+      "example_count": 12,
+      "label_count": 12,
+      "log_loss": 0.020478507264792205,
+      "roc_auc": 1.0,
+      "score_count": 12
+    }
+  }
+}

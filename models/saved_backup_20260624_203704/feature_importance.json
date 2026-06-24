@@ -1,0 +1,1394 @@
+[
+  {
+    "feature": "seq_bet_fold_rate",
+    "importance": 59.2
+  },
+  {
+    "feature": "ph_pot_growth_std",
+    "importance": 47.4
+  },
+  {
+    "feature": "ph_hero_action_share_autocorr",
+    "importance": 45.2
+  },
+  {
+    "feature": "sig_action_unique_rate",
+    "importance": 37.8
+  },
+  {
+    "feature": "sig_action_seq_entropy",
+    "importance": 30.6
+  },
+  {
+    "feature": "bet_amount_bb_cv",
+    "importance": 28.0
+  },
+  {
+    "feature": "bet_amount_cv",
+    "importance": 27.2
+  },
+  {
+    "feature": "ph_pot_growth_ratio_std",
+    "importance": 26.8
+  },
+  {
+    "feature": "river_bet_amount_mean",
+    "importance": 20.6
+  },
+  {
+    "feature": "seq_check_bet_fold_rate",
+    "importance": 20.2
+  },
+  {
+    "feature": "ph_action_count_std",
+    "importance": 19.4
+  },
+  {
+    "feature": "ph_action_count_max",
+    "importance": 19.2
+  },
+  {
+    "feature": "river_call_rate",
+    "importance": 18.2
+  },
+  {
+    "feature": "sig_bucket_run_mean",
+    "importance": 17.6
+  },
+  {
+    "feature": "at_villain_fold_to_hero_bet",
+    "importance": 15.6
+  },
+  {
+    "feature": "bet_amount_bb_mean",
+    "importance": 14.8
+  },
+  {
+    "feature": "ph_action_entropy_std",
+    "importance": 14.8
+  },
+  {
+    "feature": "turn_fold_rate",
+    "importance": 14.8
+  },
+  {
+    "feature": "turn_bet_amount_min",
+    "importance": 14.0
+  },
+  {
+    "feature": "actor_amount_cv_std",
+    "importance": 12.8
+  },
+  {
+    "feature": "bet_transition_pot_to_pot_rate",
+    "importance": 11.8
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_p25",
+    "importance": 11.8
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_std",
+    "importance": 11.8
+  },
+  {
+    "feature": "sig_actor_run_mean",
+    "importance": 11.6
+  },
+  {
+    "feature": "flop_bet_rate",
+    "importance": 10.8
+  },
+  {
+    "feature": "flop_call_rate",
+    "importance": 10.6
+  },
+  {
+    "feature": "ph_pot_growth_p50",
+    "importance": 10.6
+  },
+  {
+    "feature": "sig_bucket_unique_rate",
+    "importance": 10.4
+  },
+  {
+    "feature": "ph_hero_action_share_max",
+    "importance": 10.2
+  },
+  {
+    "feature": "ph_hero_action_share_std",
+    "importance": 10.2
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_p90",
+    "importance": 10.2
+  },
+  {
+    "feature": "actor_fold_rate_min",
+    "importance": 9.8
+  },
+  {
+    "feature": "ph_street_count_std",
+    "importance": 9.8
+  },
+  {
+    "feature": "turn_bet_amount_mean",
+    "importance": 9.8
+  },
+  {
+    "feature": "bet_pot_ratio_p75",
+    "importance": 9.6
+  },
+  {
+    "feature": "std_street_count",
+    "importance": 9.6
+  },
+  {
+    "feature": "actor_pfr_flag_max",
+    "importance": 9.4
+  },
+  {
+    "feature": "flop_fold_rate",
+    "importance": 9.4
+  },
+  {
+    "feature": "bet_amount_mean",
+    "importance": 9.2
+  },
+  {
+    "feature": "river_bet_amount_std",
+    "importance": 8.4
+  },
+  {
+    "feature": "river_bet_amount_min",
+    "importance": 8.2
+  },
+  {
+    "feature": "actor_amount_cv_max",
+    "importance": 8.0
+  },
+  {
+    "feature": "bet_amount_p75",
+    "importance": 8.0
+  },
+  {
+    "feature": "bet_amount_bb_p75",
+    "importance": 7.6
+  },
+  {
+    "feature": "bet_transition_half_pot_to_half_pot_rate",
+    "importance": 7.6
+  },
+  {
+    "feature": "pot_delta_cv_mean",
+    "importance": 7.6
+  },
+  {
+    "feature": "bet_pot_ratio_p25",
+    "importance": 7.4
+  },
+  {
+    "feature": "ph_action_count_p25",
+    "importance": 7.2
+  },
+  {
+    "feature": "seq_raise_fold_rate",
+    "importance": 7.2
+  },
+  {
+    "feature": "hero_aggression_rate",
+    "importance": 7.0
+  },
+  {
+    "feature": "ph_actor_entropy_p75",
+    "importance": 7.0
+  },
+  {
+    "feature": "seq_bet_raise_rate",
+    "importance": 7.0
+  },
+  {
+    "feature": "at_hero_action_entropy_at_1bet",
+    "importance": 6.8
+  },
+  {
+    "feature": "actor_pfr_flag_std",
+    "importance": 6.4
+  },
+  {
+    "feature": "flop_bet_amount_std",
+    "importance": 6.4
+  },
+  {
+    "feature": "ph_aggression_rate_std",
+    "importance": 6.4
+  },
+  {
+    "feature": "ph_hero_action_share_cv",
+    "importance": 6.4
+  },
+  {
+    "feature": "ph_pot_growth_p25",
+    "importance": 6.4
+  },
+  {
+    "feature": "line_cbet_rate",
+    "importance": 6.2
+  },
+  {
+    "feature": "ph_hero_action_share_p90",
+    "importance": 6.2
+  },
+  {
+    "feature": "ph_hero_aggression_rate_autocorr",
+    "importance": 6.2
+  },
+  {
+    "feature": "turn_bet_amount_std",
+    "importance": 6.2
+  },
+  {
+    "feature": "actor_vpip_flag_max",
+    "importance": 6.0
+  },
+  {
+    "feature": "bt_preflop_to_postflop_agg_drop",
+    "importance": 6.0
+  },
+  {
+    "feature": "flop_bet_amount_min",
+    "importance": 6.0
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_max",
+    "importance": 6.0
+  },
+  {
+    "feature": "ph_pot_growth_ratio_p90",
+    "importance": 6.0
+  },
+  {
+    "feature": "turn_call_rate",
+    "importance": 6.0
+  },
+  {
+    "feature": "cls_long_sequence_hand_rate",
+    "importance": 5.8
+  },
+  {
+    "feature": "ph_actor_count_ratio_p10",
+    "importance": 5.8
+  },
+  {
+    "feature": "sig_bucket_seq_entropy",
+    "importance": 5.8
+  },
+  {
+    "feature": "turn_bet_amount_max",
+    "importance": 5.8
+  },
+  {
+    "feature": "bet_amount_bb_median",
+    "importance": 5.6
+  },
+  {
+    "feature": "bet_bucket_entropy",
+    "importance": 5.6
+  },
+  {
+    "feature": "ph_actor_switch_rate_mean",
+    "importance": 5.6
+  },
+  {
+    "feature": "pot_monotonicity_mean",
+    "importance": 5.6
+  },
+  {
+    "feature": "actor_aggression_rate_std",
+    "importance": 5.4
+  },
+  {
+    "feature": "actor_vpip_flag_std",
+    "importance": 5.4
+  },
+  {
+    "feature": "bet_amount_bb_p90",
+    "importance": 5.4
+  },
+  {
+    "feature": "bet_bucket_pot_rate",
+    "importance": 5.4
+  },
+  {
+    "feature": "bet_rate",
+    "importance": 5.4
+  },
+  {
+    "feature": "ph_action_entropy_p90",
+    "importance": 5.4
+  },
+  {
+    "feature": "ph_actor_switch_rate_p25",
+    "importance": 5.4
+  },
+  {
+    "feature": "ph_hero_fold_mean",
+    "importance": 5.4
+  },
+  {
+    "feature": "ph_pot_growth_ratio_p50",
+    "importance": 5.4
+  },
+  {
+    "feature": "actor_action_count_std",
+    "importance": 5.2
+  },
+  {
+    "feature": "at_hero_action_entropy_std",
+    "importance": 5.2
+  },
+  {
+    "feature": "flop_check_rate",
+    "importance": 5.2
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_max",
+    "importance": 5.2
+  },
+  {
+    "feature": "repeat_action_rate",
+    "importance": 5.2
+  },
+  {
+    "feature": "seq_unique_bigram_rate",
+    "importance": 5.2
+  },
+  {
+    "feature": "ph_actor_count_ratio_std",
+    "importance": 5.0
+  },
+  {
+    "feature": "ph_actor_switch_rate_p10",
+    "importance": 5.0
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_autocorr",
+    "importance": 5.0
+  },
+  {
+    "feature": "ph_pot_growth_ratio_p25",
+    "importance": 5.0
+  },
+  {
+    "feature": "bet_pot_ratio_median",
+    "importance": 4.8
+  },
+  {
+    "feature": "cls_aggressive_hand_rate",
+    "importance": 4.8
+  },
+  {
+    "feature": "ph_hero_action_share_p25",
+    "importance": 4.8
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_autocorr",
+    "importance": 4.8
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_max",
+    "importance": 4.8
+  },
+  {
+    "feature": "seq_unique_trigram_rate",
+    "importance": 4.8
+  },
+  {
+    "feature": "at_hero_action_entropy_flop",
+    "importance": 4.6
+  },
+  {
+    "feature": "bet_amount_bb_std",
+    "importance": 4.6
+  },
+  {
+    "feature": "bet_bucket_half_pot_rate",
+    "importance": 4.6
+  },
+  {
+    "feature": "bt_hero_preflop_bet_ratio_mean",
+    "importance": 4.6
+  },
+  {
+    "feature": "ph_call_rate_p75",
+    "importance": 4.6
+  },
+  {
+    "feature": "ph_pot_growth_p90",
+    "importance": 4.6
+  },
+  {
+    "feature": "seq_call_check_rate",
+    "importance": 4.6
+  },
+  {
+    "feature": "at_preflop_3bet_rate",
+    "importance": 4.4
+  },
+  {
+    "feature": "bet_amount_p25",
+    "importance": 4.4
+  },
+  {
+    "feature": "bet_transition_small_to_pot_rate",
+    "importance": 4.4
+  },
+  {
+    "feature": "ph_call_rate_std",
+    "importance": 4.4
+  },
+  {
+    "feature": "ph_hero_action_share_mean",
+    "importance": 4.4
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_std",
+    "importance": 4.4
+  },
+  {
+    "feature": "ph_hero_bet_ratio_max_p90",
+    "importance": 4.4
+  },
+  {
+    "feature": "ph_pot_growth_ratio_max",
+    "importance": 4.4
+  },
+  {
+    "feature": "actor_pfr_flag_mean",
+    "importance": 4.2
+  },
+  {
+    "feature": "bet_amount_bb_min",
+    "importance": 4.2
+  },
+  {
+    "feature": "bet_amount_std",
+    "importance": 4.2
+  },
+  {
+    "feature": "bet_transition_pot_to_overbet_rate",
+    "importance": 4.2
+  },
+  {
+    "feature": "ph_aggression_rate_mean",
+    "importance": 4.2
+  },
+  {
+    "feature": "ph_pot_monotonicity_std",
+    "importance": 4.2
+  },
+  {
+    "feature": "preflop_aggression_frequency",
+    "importance": 4.2
+  },
+  {
+    "feature": "preflop_check_rate",
+    "importance": 4.2
+  },
+  {
+    "feature": "turn_aggression_frequency",
+    "importance": 4.2
+  },
+  {
+    "feature": "turn_check_rate",
+    "importance": 4.2
+  },
+  {
+    "feature": "bet_amount_p90",
+    "importance": 4.0
+  },
+  {
+    "feature": "bt_agg_trend_flop_to_river",
+    "importance": 4.0
+  },
+  {
+    "feature": "bt_hero_af_ratio",
+    "importance": 4.0
+  },
+  {
+    "feature": "bt_hero_agg_rate_preflop",
+    "importance": 4.0
+  },
+  {
+    "feature": "flop_bet_amount_mean",
+    "importance": 4.0
+  },
+  {
+    "feature": "ph_fold_rate_std",
+    "importance": 4.0
+  },
+  {
+    "feature": "ph_pot_monotonicity_mean",
+    "importance": 4.0
+  },
+  {
+    "feature": "turn_bet_rate",
+    "importance": 4.0
+  },
+  {
+    "feature": "actor_amount_cv_mean",
+    "importance": 3.8
+  },
+  {
+    "feature": "at_hero_hu_mw_agg_diff",
+    "importance": 3.8
+  },
+  {
+    "feature": "bet_amount_bb_p25",
+    "importance": 3.8
+  },
+  {
+    "feature": "bt_hero_flop_snap_rate",
+    "importance": 3.8
+  },
+  {
+    "feature": "hero_pfr",
+    "importance": 3.8
+  },
+  {
+    "feature": "ph_action_count_p75",
+    "importance": 3.8
+  },
+  {
+    "feature": "ph_pot_growth_p10",
+    "importance": 3.8
+  },
+  {
+    "feature": "pot_monotonicity_std",
+    "importance": 3.8
+  },
+  {
+    "feature": "river_bet_amount_max",
+    "importance": 3.8
+  },
+  {
+    "feature": "seq_raise_call_check_rate",
+    "importance": 3.8
+  },
+  {
+    "feature": "actor_fold_rate_max",
+    "importance": 3.6
+  },
+  {
+    "feature": "actor_repeated_bet_bucket_rate_std",
+    "importance": 3.6
+  },
+  {
+    "feature": "at_hero_hu_postflop_agg",
+    "importance": 3.6
+  },
+  {
+    "feature": "bt_hero_overall_snap_rate",
+    "importance": 3.6
+  },
+  {
+    "feature": "bt_hero_turn_bet_ratio_mean",
+    "importance": 3.6
+  },
+  {
+    "feature": "ph_hero_aggression_rate_cv",
+    "importance": 3.6
+  },
+  {
+    "feature": "ph_pot_growth_max",
+    "importance": 3.6
+  },
+  {
+    "feature": "ph_pot_growth_ratio_p75",
+    "importance": 3.6
+  },
+  {
+    "feature": "river_bet_rate",
+    "importance": 3.6
+  },
+  {
+    "feature": "seq_check_bet_rate",
+    "importance": 3.6
+  },
+  {
+    "feature": "actor_vpip_flag_min",
+    "importance": 3.4
+  },
+  {
+    "feature": "aggression_factor",
+    "importance": 3.4
+  },
+  {
+    "feature": "bet_pot_ratio_cv",
+    "importance": 3.4
+  },
+  {
+    "feature": "bt_hero_preflop_bet_ratio_std",
+    "importance": 3.4
+  },
+  {
+    "feature": "check_raise_rate",
+    "importance": 3.4
+  },
+  {
+    "feature": "mean_starting_stack",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_action_entropy_mean",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_action_entropy_p50",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_action_entropy_p75",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_mean",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_hero_bet_bb_std_max",
+    "importance": 3.4
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_p50",
+    "importance": 3.4
+  },
+  {
+    "feature": "raise_rate",
+    "importance": 3.4
+  },
+  {
+    "feature": "river_fold_rate",
+    "importance": 3.4
+  },
+  {
+    "feature": "std_starting_stack",
+    "importance": 3.4
+  },
+  {
+    "feature": "vpip",
+    "importance": 3.4
+  },
+  {
+    "feature": "actor_amount_cv_min",
+    "importance": 3.2
+  },
+  {
+    "feature": "actor_call_rate_std",
+    "importance": 3.2
+  },
+  {
+    "feature": "actor_fold_rate_std",
+    "importance": 3.2
+  },
+  {
+    "feature": "at_hero_mw_ratio",
+    "importance": 3.2
+  },
+  {
+    "feature": "at_villain_raise_to_hero_bet",
+    "importance": 3.2
+  },
+  {
+    "feature": "bt_fold_to_preflop_aggression",
+    "importance": 3.2
+  },
+  {
+    "feature": "bt_hero_flop_bet_ratio_mean",
+    "importance": 3.2
+  },
+  {
+    "feature": "hero_actions_per_hand",
+    "importance": 3.2
+  },
+  {
+    "feature": "ph_actor_count_ratio_p25",
+    "importance": 3.2
+  },
+  {
+    "feature": "ph_hero_aggression_rate_std",
+    "importance": 3.2
+  },
+  {
+    "feature": "ph_hero_bet_bb_std_mean",
+    "importance": 3.2
+  },
+  {
+    "feature": "ph_pot_growth_ratio_min",
+    "importance": 3.2
+  },
+  {
+    "feature": "preflop_bet_amount_max",
+    "importance": 3.2
+  },
+  {
+    "feature": "river_check_rate",
+    "importance": 3.2
+  },
+  {
+    "feature": "seq_raise_call_rate",
+    "importance": 3.2
+  },
+  {
+    "feature": "bet_bucket_overbet_rate",
+    "importance": 3.0
+  },
+  {
+    "feature": "bet_pot_ratio_mean",
+    "importance": 3.0
+  },
+  {
+    "feature": "bt_hero_3bet_open_ratio",
+    "importance": 3.0
+  },
+  {
+    "feature": "flop_aggression_frequency",
+    "importance": 3.0
+  },
+  {
+    "feature": "hero_vpip",
+    "importance": 3.0
+  },
+  {
+    "feature": "ph_check_rate_max",
+    "importance": 3.0
+  },
+  {
+    "feature": "ph_chunk_snap_rate",
+    "importance": 3.0
+  },
+  {
+    "feature": "at_hero_action_entropy_mean",
+    "importance": 2.8
+  },
+  {
+    "feature": "at_hero_action_entropy_preflop",
+    "importance": 2.8
+  },
+  {
+    "feature": "bet_pot_ratio_min",
+    "importance": 2.8
+  },
+  {
+    "feature": "bt_hero_flop_bet_ratio_std",
+    "importance": 2.8
+  },
+  {
+    "feature": "call_rate",
+    "importance": 2.8
+  },
+  {
+    "feature": "ph_action_count_min",
+    "importance": 2.8
+  },
+  {
+    "feature": "ph_check_rate_p75",
+    "importance": 2.8
+  },
+  {
+    "feature": "ph_check_rate_std",
+    "importance": 2.8
+  },
+  {
+    "feature": "ph_hero_bet_ratio_std_mean",
+    "importance": 2.8
+  },
+  {
+    "feature": "ph_pot_growth_p75",
+    "importance": 2.8
+  },
+  {
+    "feature": "actor_aggression_rate_max",
+    "importance": 2.6
+  },
+  {
+    "feature": "actor_aggression_rate_mean",
+    "importance": 2.6
+  },
+  {
+    "feature": "actor_call_rate_max",
+    "importance": 2.6
+  },
+  {
+    "feature": "bet_amount_bb_max",
+    "importance": 2.6
+  },
+  {
+    "feature": "bt_hero_af_preflop",
+    "importance": 2.6
+  },
+  {
+    "feature": "bt_hero_preflop_snap_rate",
+    "importance": 2.6
+  },
+  {
+    "feature": "call_count",
+    "importance": 2.6
+  },
+  {
+    "feature": "hero_fold_rate",
+    "importance": 2.6
+  },
+  {
+    "feature": "ph_call_rate_p90",
+    "importance": 2.6
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_mean",
+    "importance": 2.6
+  },
+  {
+    "feature": "ph_pot_monotonicity_p10",
+    "importance": 2.6
+  },
+  {
+    "feature": "preflop_call_rate",
+    "importance": 2.6
+  },
+  {
+    "feature": "river_aggression_frequency",
+    "importance": 2.6
+  },
+  {
+    "feature": "actor_aggression_rate_min",
+    "importance": 2.4
+  },
+  {
+    "feature": "bet_amount_median",
+    "importance": 2.4
+  },
+  {
+    "feature": "flop_bet_amount_max",
+    "importance": 2.4
+  },
+  {
+    "feature": "ph_action_count_p90",
+    "importance": 2.4
+  },
+  {
+    "feature": "ph_actor_entropy_p10",
+    "importance": 2.4
+  },
+  {
+    "feature": "ph_hero_action_count_std",
+    "importance": 2.4
+  },
+  {
+    "feature": "ph_hero_bet_ratio_std_max",
+    "importance": 2.4
+  },
+  {
+    "feature": "ph_unique_actor_count_mean",
+    "importance": 2.4
+  },
+  {
+    "feature": "river_action_count",
+    "importance": 2.4
+  },
+  {
+    "feature": "river_raise_rate",
+    "importance": 2.4
+  },
+  {
+    "feature": "at_hero_count_at_1bet",
+    "importance": 2.2
+  },
+  {
+    "feature": "bet_amount_min",
+    "importance": 2.2
+  },
+  {
+    "feature": "bet_transition_small_to_small_rate",
+    "importance": 2.2
+  },
+  {
+    "feature": "bt_hero_3bet_rate",
+    "importance": 2.2
+  },
+  {
+    "feature": "ph_hero_action_share_p75",
+    "importance": 2.2
+  },
+  {
+    "feature": "ph_hero_bet_bb_mean_cv",
+    "importance": 2.2
+  },
+  {
+    "feature": "ph_hero_bet_ratio_max_std",
+    "importance": 2.2
+  },
+  {
+    "feature": "preflop_fold_rate",
+    "importance": 2.2
+  },
+  {
+    "feature": "actor_action_count_min",
+    "importance": 2.0
+  },
+  {
+    "feature": "actor_repeated_bet_bucket_rate_mean",
+    "importance": 2.0
+  },
+  {
+    "feature": "aggression_frequency",
+    "importance": 2.0
+  },
+  {
+    "feature": "at_hero_agg_medium",
+    "importance": 2.0
+  },
+  {
+    "feature": "bt_hero_af_mismatch",
+    "importance": 2.0
+  },
+  {
+    "feature": "check_count",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_actor_count_ratio_mean",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_actor_entropy_std",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_actor_switch_rate_std",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_hero_bet_ratio_max_max",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_hero_fold_vs_aggression_mean",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_p75",
+    "importance": 2.0
+  },
+  {
+    "feature": "ph_pot_monotonicity_p50",
+    "importance": 2.0
+  },
+  {
+    "feature": "seq_bet_call_rate",
+    "importance": 2.0
+  },
+  {
+    "feature": "actions_per_hand",
+    "importance": 1.8
+  },
+  {
+    "feature": "at_preflop_depth_entropy",
+    "importance": 1.8
+  },
+  {
+    "feature": "bet_bucket_repeat_rate",
+    "importance": 1.8
+  },
+  {
+    "feature": "bet_bucket_small_rate",
+    "importance": 1.8
+  },
+  {
+    "feature": "bt_hero_open_raise_rate",
+    "importance": 1.8
+  },
+  {
+    "feature": "flop_action_count",
+    "importance": 1.8
+  },
+  {
+    "feature": "line_preflop_raise_rate",
+    "importance": 1.8
+  },
+  {
+    "feature": "ph_aggression_rate_p50",
+    "importance": 1.8
+  },
+  {
+    "feature": "ph_aggression_rate_p90",
+    "importance": 1.8
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_std",
+    "importance": 1.8
+  },
+  {
+    "feature": "ph_unique_actor_count_std",
+    "importance": 1.8
+  },
+  {
+    "feature": "actor_call_rate_mean",
+    "importance": 1.6
+  },
+  {
+    "feature": "actor_repeated_bet_bucket_rate_max",
+    "importance": 1.6
+  },
+  {
+    "feature": "at_hero_action_count_preflop",
+    "importance": 1.6
+  },
+  {
+    "feature": "at_hero_action_entropy_turn",
+    "importance": 1.6
+  },
+  {
+    "feature": "bet_pot_ratio_max",
+    "importance": 1.6
+  },
+  {
+    "feature": "bet_pot_ratio_p90",
+    "importance": 1.6
+  },
+  {
+    "feature": "bt_hero_overall_bet_ratio_std",
+    "importance": 1.6
+  },
+  {
+    "feature": "hero_call_rate",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_actor_entropy_p90",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_fold_rate_p50",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_hero_action_count_mean",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_p90",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_hero_bet_snap_rate_mean",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_hero_fold_std",
+    "importance": 1.6
+  },
+  {
+    "feature": "ph_pot_monotonicity_p90",
+    "importance": 1.6
+  },
+  {
+    "feature": "preflop_action_count",
+    "importance": 1.6
+  },
+  {
+    "feature": "action_count",
+    "importance": 1.4
+  },
+  {
+    "feature": "actor_repeated_bet_bucket_rate_min",
+    "importance": 1.4
+  },
+  {
+    "feature": "at_hero_action_count_flop",
+    "importance": 1.4
+  },
+  {
+    "feature": "at_hero_action_count_river",
+    "importance": 1.4
+  },
+  {
+    "feature": "at_hero_ip_oop_agg_diff",
+    "importance": 1.4
+  },
+  {
+    "feature": "at_hero_oop_hands",
+    "importance": 1.4
+  },
+  {
+    "feature": "bt_check_fold_flop_rate",
+    "importance": 1.4
+  },
+  {
+    "feature": "bt_faced_preflop_aggression_count",
+    "importance": 1.4
+  },
+  {
+    "feature": "bt_hero_3bet_vpip_ratio",
+    "importance": 1.4
+  },
+  {
+    "feature": "bt_hero_af_flop",
+    "importance": 1.4
+  },
+  {
+    "feature": "flop_raise_rate",
+    "importance": 1.4
+  },
+  {
+    "feature": "ph_hero_bet_count_nonzero_std",
+    "importance": 1.4
+  },
+  {
+    "feature": "ph_hero_bet_ratio_mean_cv",
+    "importance": 1.4
+  },
+  {
+    "feature": "ph_hero_bet_ratio_std_std",
+    "importance": 1.4
+  },
+  {
+    "feature": "sig_action_run_mean",
+    "importance": 1.4
+  },
+  {
+    "feature": "at_hero_hu_hands",
+    "importance": 1.2
+  },
+  {
+    "feature": "check_rate",
+    "importance": 1.2
+  },
+  {
+    "feature": "mean_pot_growth",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_action_count_p10",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_action_entropy_max",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_actor_count_ratio_min",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_fold_rate_p10",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_hero_bet_bb_std_p90",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_hero_bet_count_mean",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_mean",
+    "importance": 1.2
+  },
+  {
+    "feature": "ph_player_count_std",
+    "importance": 1.2
+  },
+  {
+    "feature": "sig_top_bucket_sig_rate",
+    "importance": 1.2
+  },
+  {
+    "feature": "at_hero_bet_size_entropy_flop",
+    "importance": 1.0
+  },
+  {
+    "feature": "bet_pot_ratio_std",
+    "importance": 1.0
+  },
+  {
+    "feature": "bt_hero_af_postflop",
+    "importance": 1.0
+  },
+  {
+    "feature": "fold_count",
+    "importance": 1.0
+  },
+  {
+    "feature": "ph_actor_entropy_p25",
+    "importance": 1.0
+  },
+  {
+    "feature": "ph_actor_entropy_p50",
+    "importance": 1.0
+  },
+  {
+    "feature": "ph_fold_rate_mean",
+    "importance": 1.0
+  },
+  {
+    "feature": "ph_hero_bet_ratio_max_mean",
+    "importance": 1.0
+  },
+  {
+    "feature": "seq_street_bigram_entropy",
+    "importance": 1.0
+  },
+  {
+    "feature": "actor_call_rate_min",
+    "importance": 0.8
+  },
+  {
+    "feature": "at_hero_mw_hands",
+    "importance": 0.8
+  },
+  {
+    "feature": "bet_bucket_tiny_rate",
+    "importance": 0.8
+  },
+  {
+    "feature": "bt_postflop_faced_aggression",
+    "importance": 0.8
+  },
+  {
+    "feature": "ph_actor_switch_rate_min",
+    "importance": 0.8
+  },
+  {
+    "feature": "ph_aggression_rate_p10",
+    "importance": 0.8
+  },
+  {
+    "feature": "ph_fold_rate_min",
+    "importance": 0.8
+  },
+  {
+    "feature": "ph_hero_call_mean",
+    "importance": 0.8
+  },
+  {
+    "feature": "ph_hero_fold_vs_aggression_std",
+    "importance": 0.8
+  },
+  {
+    "feature": "preflop_bet_amount_mean",
+    "importance": 0.8
+  },
+  {
+    "feature": "bt_faced_flop_aggression_count",
+    "importance": 0.6
+  },
+  {
+    "feature": "bt_fold_to_flop_aggression",
+    "importance": 0.6
+  },
+  {
+    "feature": "bt_fold_to_turn_aggression",
+    "importance": 0.6
+  },
+  {
+    "feature": "bt_hero_agg_rate_flop",
+    "importance": 0.6
+  },
+  {
+    "feature": "bt_hero_turn_bet_ratio_std",
+    "importance": 0.6
+  },
+  {
+    "feature": "hero_participation_rate",
+    "importance": 0.6
+  },
+  {
+    "feature": "line_delayed_turn_aggression_rate",
+    "importance": 0.6
+  },
+  {
+    "feature": "ph_player_count_p50",
+    "importance": 0.6
+  },
+  {
+    "feature": "action_entropy",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_hero_action_entropy_river",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_hero_count_at_2bet",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_preflop_2bet_rate",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_spr_agg_range",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_spr_agg_variance",
+    "importance": 0.4
+  },
+  {
+    "feature": "bt_hero_vpip",
+    "importance": 0.4
+  },
+  {
+    "feature": "ph_hero_action_count_p10",
+    "importance": 0.4
+  },
+  {
+    "feature": "ph_hero_pfr_mean",
+    "importance": 0.4
+  },
+  {
+    "feature": "preflop_bet_amount_std",
+    "importance": 0.4
+  },
+  {
+    "feature": "at_hero_action_count_turn",
+    "importance": 0.2
+  },
+  {
+    "feature": "bet_amount_max",
+    "importance": 0.2
+  },
+  {
+    "feature": "ph_aggression_rate_p75",
+    "importance": 0.2
+  },
+  {
+    "feature": "ph_hero_action_share_p50",
+    "importance": 0.2
+  },
+  {
+    "feature": "ph_hero_fold_p25",
+    "importance": 0.2
+  },
+  {
+    "feature": "ph_nonzero_amount_rate_p10",
+    "importance": 0.2
+  },
+  {
+    "feature": "ph_unique_actor_count_p25",
+    "importance": 0.2
+  },
+  {
+    "feature": "bt_cbet_opportunities",
+    "importance": 0.0
+  },
+  {
+    "feature": "ph_hero_bet_bb_std_std",
+    "importance": 0.0
+  },
+  {
+    "feature": "ph_hero_vpip_p75",
+    "importance": 0.0
+  }
+]

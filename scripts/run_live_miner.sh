@@ -6,5 +6,4 @@ python neurons/miner.py \
   --wallet.name "${WALLET_NAME:?Set WALLET_NAME}" \
   --wallet.hotkey "${HOTKEY:?Set HOTKEY}" \
   --subtensor.network "${SUBTENSOR_NETWORK:-finney}" \
-  --axon.port "${AXON_PORT:?Set AXON_PORT}" \
-  ${ALLOWED_VALIDATOR_HOTKEYS:+--blacklist.allowed_validator_hotkeys ${ALLOWED_VALIDATOR_HOTKEYS}}
+  --axon.port "${AXON_PORT:?Set AXON_PORT}"

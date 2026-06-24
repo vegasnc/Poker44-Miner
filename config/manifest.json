@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "e0c9f4fa9116df1f75b01c31cef1047fb8fc155ae921198604f9defcb23cfc44",
+  "artifact_sha256": "52df004e51cd1b6a92608a42593eda951e06b3402832ddf49fd8f64faf98abc3",
   "artifact_url": "https://github.com/vegasnc/Poker44-Miner/releases/v1.0.0/model.joblib",
   "data_attestation": "All training data is from official Poker44 public benchmark",
   "framework": "lightgbm",
@@ -12,7 +12,7 @@
     "src/features/engineering.py",
     "src/models/baseline.py"
   ],
-  "implementation_sha256": "fcaf8b3cc0ac04e2b6cf4ba6d28b88f9e23b2a0393fa81787e52af2cc975f2e2",
+  "implementation_sha256": "2f9397185c0f58b60b5e062d6f4bad3669109fc23af2375f79b0cef5e21ffa8d",
   "inference_mode": "batch",
   "license": "MIT",
   "model_card_url": "https://github.com/vegasnc/Poker44-Miner/blob/main/model_card.md",
@@ -21,7 +21,7 @@
   "notes": "Baseline LightGBM model with engineered behavioral features.",
   "open_source": true,
   "private_data_attestation": "No private or proprietary data used in training",
-  "repo_commit": "2a71b9954b06e006edf6993a43a447d229cd2637",
+  "repo_commit": "71a840d4fe0b2e1c38631627a44337b3bcb4c1c3",
   "repo_url": "https://github.com/vegasnc/Poker44-Miner",
   "schema_version": "1.0",
   "training_data_sources": [

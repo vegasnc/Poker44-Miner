@@ -54,8 +54,18 @@ class BotRiskPredictor:
             self.load()
         assert self.model is not None and self.features is not None
         try:
-            matrix = self.features.transform(chunk_groups)
-            scores = self.model.predict_proba(matrix)
+            from src.data.preprocessor import normalize_chunk_group
+            from src.features.per_hand import extract_hand_matrix
+            normalized = [normalize_chunk_group(cg) for cg in chunk_groups]
+            matrix = self.features.transform(normalized)
+            # Pass hand matrices for Set Transformer if model supports it
+            hand_matrices = [extract_hand_matrix(ng) for ng in normalized]
+            import inspect
+            sig = inspect.signature(self.model.predict_proba)
+            if "hand_matrices" in sig.parameters:
+                scores = self.model.predict_proba(matrix, hand_matrices=hand_matrices)
+            else:
+                scores = self.model.predict_proba(matrix)
             return [clamp_probability(float(score)) for score in scores]
         except Exception:
             return [clamp_probability(self.fallback_score)] * len(chunk_groups)

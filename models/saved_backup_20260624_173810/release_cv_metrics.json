@@ -1,0 +1,154 @@
+{
+  "contract_checks": {
+    "all_score_counts_match_labels": true,
+    "all_scores_in_0_1": true
+  },
+  "dates": [
+    "2026-06-13",
+    "2026-06-14",
+    "2026-06-15",
+    "2026-06-16",
+    "2026-06-17",
+    "2026-06-18",
+    "2026-06-19",
+    "2026-06-20",
+    "2026-06-21",
+    "2026-06-22",
+    "2026-06-23",
+    "2026-06-24"
+  ],
+  "evaluation_type": "leave_one_release_out",
+  "example_count": 164,
+  "mean_average_precision": 0.8877198088507611,
+  "mean_brier_score": 0.15374582163699643,
+  "mean_log_loss": 0.47448348752094094,
+  "mean_roc_auc": 0.8596082530234316,
+  "overall_oof": {
+    "average_precision": 0.889671815997242,
+    "brier_score": 0.14840385990982158,
+    "log_loss": 0.4599572164417143,
+    "roc_auc": 0.877007733491969
+  },
+  "per_release": {
+    "2026-06-13": {
+      "average_precision": 0.7044973544973544,
+      "brier_score": 0.24700938128324326,
+      "example_count": 12,
+      "log_loss": 0.6656614214213246,
+      "roc_auc": 0.6111111111111112,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 152
+    },
+    "2026-06-14": {
+      "average_precision": 0.8523809523809522,
+      "brier_score": 0.21710525879813128,
+      "example_count": 14,
+      "log_loss": 0.735561033992029,
+      "roc_auc": 0.8163265306122449,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-15": {
+      "average_precision": 0.9617346938775508,
+      "brier_score": 0.06820787493294331,
+      "example_count": 14,
+      "log_loss": 0.23101733278633096,
+      "roc_auc": 0.9591836734693878,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-16": {
+      "average_precision": 0.9519230769230769,
+      "brier_score": 0.1349208853965997,
+      "example_count": 16,
+      "log_loss": 0.4409886633328469,
+      "roc_auc": 0.921875,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 148
+    },
+    "2026-06-17": {
+      "average_precision": 0.848611111111111,
+      "brier_score": 0.21152619098932213,
+      "example_count": 12,
+      "log_loss": 0.6545230133630667,
+      "roc_auc": 0.8055555555555556,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 152
+    },
+    "2026-06-18": {
+      "average_precision": 1.0,
+      "brier_score": 0.013912358903399853,
+      "example_count": 16,
+      "log_loss": 0.09089010348744672,
+      "roc_auc": 1.0,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 148
+    },
+    "2026-06-19": {
+      "average_precision": 0.982142857142857,
+      "brier_score": 0.07705496179628225,
+      "example_count": 14,
+      "log_loss": 0.2500086826803734,
+      "roc_auc": 0.979591836734694,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-20": {
+      "average_precision": 0.9240362811791383,
+      "brier_score": 0.17374871472030945,
+      "example_count": 14,
+      "log_loss": 0.4975799185431102,
+      "roc_auc": 0.9183673469387755,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-21": {
+      "average_precision": 0.9571428571428571,
+      "brier_score": 0.09594636633025984,
+      "example_count": 14,
+      "log_loss": 0.28766604271421004,
+      "roc_auc": 0.9387755102040816,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-22": {
+      "average_precision": 0.9583333333333333,
+      "brier_score": 0.1082183131161013,
+      "example_count": 12,
+      "log_loss": 0.3511391634639231,
+      "roc_auc": 0.9444444444444445,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 152
+    },
+    "2026-06-23": {
+      "average_precision": 0.8715213358070499,
+      "brier_score": 0.16968768956370087,
+      "example_count": 14,
+      "log_loss": 0.48809010235618244,
+      "roc_auc": 0.8367346938775511,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 150
+    },
+    "2026-06-24": {
+      "average_precision": 0.6403138528138528,
+      "brier_score": 0.32761186381366375,
+      "example_count": 12,
+      "log_loss": 1.000676372110447,
+      "roc_auc": 0.5833333333333334,
+      "score_count_matches_labels": true,
+      "scores_in_0_1": true,
+      "train_count": 152
+    }
+  }
+}

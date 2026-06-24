@@ -8,6 +8,7 @@ import numpy as np
 
 from src.data.loader import BenchmarkClient, DatasetExample, load_benchmark_examples
 from src.features.engineering import FeaturePipeline
+from src.features.per_hand import extract_hand_matrix
 from src.models.baseline import LightGBMBotDetector
 from src.models.ensemble import StackedEnsemble
 from src.training.evaluator import summarize_evaluation
@@ -47,18 +48,29 @@ class TrainingPipeline:
         x_test = feature_pipeline.transform([example.chunk for example in test_examples])
         y_test = np.asarray([example.label for example in test_examples], dtype=int)
 
+        # Per-hand matrices for Set Transformer
+        mats_train = _extract_matrices(train_examples)
+        mats_valid = _extract_matrices(valid_examples) if valid_examples else None
+        mats_test = _extract_matrices(test_examples)
+
         seed = int(training_config.get("random_seed", 42))
         model = _build_model(model_config, seed)
-        model.fit(x_train, y_train, x_valid, y_valid)
-        test_scores = model.predict_proba(x_test)
+        model.fit(x_train, y_train, x_valid, y_valid,
+                  hand_matrices_train=mats_train, hand_matrices_valid=mats_valid)
+        test_scores = model.predict_proba(x_test, hand_matrices=mats_test)
         metrics = summarize_evaluation(y_test, test_scores, [_metadata(example) for example in test_examples])
 
-        # Final production artifact retrained on all available data.
+        # Final production model retrained on all available data
         final_feature_pipeline = FeaturePipeline(config=self.config)
         x_all = final_feature_pipeline.fit_transform([example.chunk for example in examples])
         y_all = np.asarray([example.label for example in examples], dtype=int)
+
+        # Prune zero-importance features before final training
+        x_all, final_feature_pipeline = _prune_zero_importance(x_all, y_all, final_feature_pipeline, model_config, seed)
+
+        mats_all = _extract_matrices(examples)
         final_model = _build_model(model_config, seed)
-        final_model.fit(x_all, y_all)
+        final_model.fit(x_all, y_all, hand_matrices_train=mats_all)
 
         model_path = Path(inference_config.get("model_path", "models/saved/model.joblib"))
         feature_names_path = Path(inference_config.get("feature_names_path", "models/saved/feature_names.json"))
@@ -121,6 +133,39 @@ class TrainingPipeline:
         save_json(self.manifest_path, manifest)
 
 
+def _extract_matrices(examples: list[DatasetExample]) -> list[np.ndarray]:
+    """Extract per-hand feature matrices from a list of DatasetExamples."""
+    from src.data.preprocessor import normalize_chunk_group
+    return [extract_hand_matrix(normalize_chunk_group(ex.chunk)) for ex in examples]
+
+
+def _prune_zero_importance(
+    x_all: Any,
+    y_all: Any,
+    pipeline: FeaturePipeline,
+    model_config: dict[str, Any],
+    seed: int,
+) -> tuple[Any, FeaturePipeline]:
+    """Remove features with zero importance using a quick LightGBM probe."""
+    import logging
+    from lightgbm import LGBMClassifier
+
+    probe = LGBMClassifier(n_estimators=200, num_leaves=15, learning_rate=0.05, verbose=-1, random_state=seed)
+    probe.fit(x_all, y_all)
+    importances = probe.feature_importances_
+    feat_names = list(x_all.columns) if hasattr(x_all, "columns") else (pipeline.feature_names or [])
+    keep = [name for name, imp in zip(feat_names, importances) if imp > 0]
+    if len(keep) < 10:
+        return x_all, pipeline
+    pruned_pipeline = FeaturePipeline(feature_names=keep, config=pipeline.config)
+    x_pruned = x_all[keep] if hasattr(x_all, "__getitem__") else x_all
+    logging.getLogger(__name__).info(
+        "Feature pruning: %d → %d features (removed %d zero-importance)",
+        len(feat_names), len(keep), len(feat_names) - len(keep),
+    )
+    return x_pruned, pruned_pipeline
+
+
 def _build_model(model_config: dict[str, Any], seed: int) -> Any:
     model_type = model_config.get("type", "lightgbm")
     if model_type == "stacked_ensemble":
@@ -128,9 +173,14 @@ def _build_model(model_config: dict[str, Any], seed: int) -> Any:
         return StackedEnsemble(
             lgbm_params=model_config.get("lgbm_params", {}),
             xgb_params=model_config.get("xgb_params", {}),
+            catboost_params=model_config.get("catboost_params", {}),
+            set_transformer_params=model_config.get("set_transformer_params", {}),
             n_folds=int(ensemble_cfg.get("n_folds", 5)),
             random_seed=seed,
             calibrator_blend=float(ensemble_cfg.get("calibrator_blend", 0.7)),
+            human_weight=float(ensemble_cfg.get("human_weight", 2.0)),
+            target_fpr=float(ensemble_cfg.get("target_fpr", 0.04)),
+            use_set_transformer=bool(ensemble_cfg.get("use_set_transformer", True)),
         )
     return LightGBMBotDetector(
         params=model_config.get("params", {}),
@@ -170,10 +220,7 @@ def _metadata(example: DatasetExample) -> dict[str, Any]:
 def _git_commit() -> str:
     try:
         result = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
+            ["git", "rev-parse", "HEAD"], check=True, capture_output=True, text=True,
         )
         return result.stdout.strip()
     except Exception:

@@ -13,6 +13,10 @@ from src.features.behavioral import (
     extract_bet_sizing_features,
     extract_timing_features,
 )
+from src.features.advanced_tells import extract_advanced_tell_features
+from src.features.gto_tells import extract_gto_tell_features
+from src.features.bot_tells import extract_bot_tell_features
+from src.features.per_hand import extract_per_hand_features
 from src.features.statistical import extract_statistical_features
 from src.utils.helpers import load_json, save_json
 
@@ -37,6 +41,14 @@ class FeaturePipeline:
             features.update(extract_timing_features(normalized))
         if enabled.get("advanced_patterns", True):
             features.update(extract_advanced_features(normalized))
+        if enabled.get("per_hand_aggregation", True):
+            features.update(extract_per_hand_features(normalized))
+        if enabled.get("bot_tell_features", True):
+            features.update(extract_bot_tell_features(normalized))
+        if enabled.get("advanced_tell_features", True):
+            features.update(extract_advanced_tell_features(normalized))
+        if enabled.get("gto_tell_features", True):
+            features.update(extract_gto_tell_features(normalized))
 
         if not features:
             features["hand_count"] = float(len(normalized))
