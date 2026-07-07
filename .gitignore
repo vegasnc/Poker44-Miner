@@ -7,9 +7,11 @@ __pycache__/
 .ruff_cache/
 .env
 data/cache/*.json
+data/hard_regressions/*.json
 models/saved/*.joblib
 models/saved/*.json
 logs/*.log
+logs/miners/*.log
 !data/cache/.gitkeep
 !models/saved/.gitkeep
 !logs/.gitkeep
