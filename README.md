@@ -152,12 +152,12 @@ pm2 delete poker44-miner
 Project logs are recorded under `logs/`:
 
 ```bash
-logs/poker44-miner.log      # Python miner logger, uncaught exceptions, mirrored stdout/stderr
+logs/poker44-miner.log      # all Python, synapse, raw Axon HTTP, exceptions, mirrored stdout/stderr
 logs/poker44-miner.out.log  # PM2 stdout capture
 logs/poker44-miner.err.log  # PM2 stderr capture
 ```
 
-Watch all miner logs:
+Watch the unified miner log:
 
 ```bash
 pm2 logs poker44-miner

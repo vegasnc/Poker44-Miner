@@ -49,8 +49,8 @@ model:
   ensemble:
     n_folds: 5
     calibrator_blend: 0.7
-    human_weight: 2.0
-    target_fpr: 0.04
+    human_weight: 10.0
+    target_fpr: 0.0
     use_set_transformer: true
 
 features:
@@ -66,6 +66,7 @@ features:
   bot_tell_features: true
   advanced_tell_features: true
   gto_tell_features: true
+  gto_engine_features: true
 
 training:
   test_size: 0.2
@@ -75,12 +76,23 @@ training:
   use_multiple_releases: true
   min_releases: 3
 
+augmentation:
+  enabled: true
+  n_chunks_per_class: 500
+  target_hands: 100
+
+synthetic:
+  enabled: true
+  n_chunks_per_class: 100
+  n_hands_per_chunk: 100
+  seed: 123
+
 data:
   base_url: "https://api.poker44.net/api/v1/benchmark"
   cache_dir: "data/cache"
-  max_chunks_per_day: 24
+  max_chunks_per_day: 48
   start_date: "2026-05-26"
-  end_date: "2026-06-24"
+  end_date: "2026-07-02"
 
 inference:
   batch_size: 10

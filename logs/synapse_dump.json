@@ -1,0 +1,363 @@
+{
+  "chunk_count": 100,
+  "hands_per_chunk": [
+    100,
+    100,
+    100
+  ],
+  "sample_chunk_0_hand_0": {
+    "metadata": {
+      "game_type": "Hold'em",
+      "limit_type": "No Limit",
+      "max_seats": 6,
+      "hero_seat": 1,
+      "hand_ended_on_street": "",
+      "button_seat": 0,
+      "sb": 0.01,
+      "bb": 0.02,
+      "ante": 0.0,
+      "rng_seed_commitment": null
+    },
+    "players": [
+      {
+        "player_uid": "seat_1",
+        "seat": 1,
+        "starting_stack": 1.9882,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_2",
+        "seat": 2,
+        "starting_stack": 1.994,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_3",
+        "seat": 3,
+        "starting_stack": 2.0008,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_4",
+        "seat": 4,
+        "starting_stack": 2.0058,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_5",
+        "seat": 5,
+        "starting_stack": 2.012,
+        "hole_cards": null,
+        "showed_hand": false
+      }
+    ],
+    "streets": [],
+    "actions": [
+      {
+        "action_id": "1",
+        "street": "preflop",
+        "actor_seat": 1,
+        "action_type": "check",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.0582,
+        "pot_after": 0.0636
+      },
+      {
+        "action_id": "2",
+        "street": "preflop",
+        "actor_seat": 3,
+        "action_type": "check",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.06,
+        "pot_after": 0.06
+      },
+      {
+        "action_id": "3",
+        "street": "preflop",
+        "actor_seat": 2,
+        "action_type": "fold",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.0564,
+        "pot_after": 0.058
+      },
+      {
+        "action_id": "4",
+        "street": "preflop",
+        "actor_seat": 4,
+        "action_type": "fold",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.0598,
+        "pot_after": 0.0564
+      },
+      {
+        "action_id": "5",
+        "street": "preflop",
+        "actor_seat": 1,
+        "action_type": "fold",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.0578,
+        "pot_after": 0.0574
+      }
+    ],
+    "outcome": {
+      "winners": [],
+      "payouts": {},
+      "total_pot": 0.0,
+      "rake": 0.0,
+      "result_reason": "",
+      "showdown": false
+    }
+  },
+  "sample_chunk_0_hand_1": {
+    "metadata": {
+      "game_type": "Hold'em",
+      "limit_type": "No Limit",
+      "max_seats": 6,
+      "hero_seat": 3,
+      "hand_ended_on_street": "",
+      "button_seat": 0,
+      "sb": 0.01,
+      "bb": 0.02,
+      "ante": 0.0,
+      "rng_seed_commitment": null
+    },
+    "players": [
+      {
+        "player_uid": "seat_1",
+        "seat": 1,
+        "starting_stack": 1.986,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_2",
+        "seat": 2,
+        "starting_stack": 1.9904,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_3",
+        "seat": 3,
+        "starting_stack": 1.9964,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_4",
+        "seat": 4,
+        "starting_stack": 2.0026,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_5",
+        "seat": 5,
+        "starting_stack": 2.0086,
+        "hole_cards": null,
+        "showed_hand": false
+      },
+      {
+        "player_uid": "seat_6",
+        "seat": 6,
+        "starting_stack": 2.016,
+        "hole_cards": null,
+        "showed_hand": false
+      }
+    ],
+    "streets": [
+      {
+        "street": "flop",
+        "board_cards": []
+      },
+      {
+        "street": "turn",
+        "board_cards": []
+      },
+      {
+        "street": "river",
+        "board_cards": []
+      }
+    ],
+    "actions": [
+      {
+        "action_id": "1",
+        "street": "preflop",
+        "actor_seat": 1,
+        "action_type": "check",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.0592,
+        "pot_after": 0.0624
+      },
+      {
+        "action_id": "2",
+        "street": "preflop",
+        "actor_seat": 2,
+        "action_type": "call",
+        "amount": 0.0216,
+        "raise_to": null,
+        "call_to": 0.0186,
+        "normalized_amount_bb": 1.08,
+        "pot_before": 0.0576,
+        "pot_after": 0.0588
+      },
+      {
+        "action_id": "3",
+        "street": "preflop",
+        "actor_seat": 3,
+        "action_type": "raise",
+        "amount": 0.0288,
+        "raise_to": 0.039,
+        "call_to": null,
+        "normalized_amount_bb": 1.44,
+        "pot_before": 0.0606,
+        "pot_after": 0.078
+      },
+      {
+        "action_id": "4",
+        "street": "preflop",
+        "actor_seat": 1,
+        "action_type": "call",
+        "amount": 0.0192,
+        "raise_to": null,
+        "call_to": 0.0202,
+        "normalized_amount_bb": 0.96,
+        "pot_before": 0.0792,
+        "pot_after": 0.1174
+      },
+      {
+        "action_id": "5",
+        "street": "turn",
+        "actor_seat": 1,
+        "action_type": "call",
+        "amount": 0.0196,
+        "raise_to": null,
+        "call_to": 0.0202,
+        "normalized_amount_bb": 0.98,
+        "pot_before": 0.1208,
+        "pot_after": 0.1196
+      },
+      {
+        "action_id": "6",
+        "street": "turn",
+        "actor_seat": 3,
+        "action_type": "bet",
+        "amount": 0.0286,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 1.43,
+        "pot_before": 0.1192,
+        "pot_after": 0.1168
+      },
+      {
+        "action_id": "7",
+        "street": "river",
+        "actor_seat": 1,
+        "action_type": "call",
+        "amount": 0.0216,
+        "raise_to": null,
+        "call_to": 0.0204,
+        "normalized_amount_bb": 1.08,
+        "pot_before": 0.1182,
+        "pot_after": 0.1602
+      },
+      {
+        "action_id": "8",
+        "street": "river",
+        "actor_seat": 1,
+        "action_type": "check",
+        "amount": 0.0,
+        "raise_to": null,
+        "call_to": null,
+        "normalized_amount_bb": 0.0,
+        "pot_before": 0.1572,
+        "pot_after": 0.161
+      }
+    ],
+    "outcome": {
+      "winners": [],
+      "payouts": {},
+      "total_pot": 0.0,
+      "rake": 0.0,
+      "result_reason": "",
+      "showdown": false
+    }
+  },
+  "synapse_fields": [
+    "axon",
+    "body_hash",
+    "chunks",
+    "computed_body_hash",
+    "construct",
+    "copy",
+    "dendrite",
+    "deserialize",
+    "dict",
+    "failed_verification",
+    "from_headers",
+    "from_orm",
+    "get_required_fields",
+    "get_total_size",
+    "header_size",
+    "is_blacklist",
+    "is_failure",
+    "is_success",
+    "is_timeout",
+    "json",
+    "model_computed_fields",
+    "model_config",
+    "model_construct",
+    "model_copy",
+    "model_dump",
+    "model_dump_json",
+    "model_extra",
+    "model_fields",
+    "model_fields_set",
+    "model_json_schema",
+    "model_manifest",
+    "model_parametrized_name",
+    "model_post_init",
+    "model_rebuild",
+    "model_validate",
+    "model_validate_json",
+    "model_validate_strings",
+    "name",
+    "parse_file",
+    "parse_headers_to_inputs",
+    "parse_obj",
+    "parse_raw",
+    "predictions",
+    "required_hash_fields",
+    "risk_scores",
+    "schema",
+    "schema_json",
+    "set_name_type",
+    "timeout",
+    "to_headers",
+    "total_size",
+    "update_forward_refs",
+    "validate"
+  ]
+}

@@ -67,7 +67,12 @@ class BotRiskPredictor:
             else:
                 scores = self.model.predict_proba(matrix)
             return [clamp_probability(float(score)) for score in scores]
-        except Exception:
+        except Exception as exc:
+            import logging as _logging
+            _logging.getLogger("poker44.synapse").error(
+                "[PREDICTOR:ERROR] predict_chunks failed: %s: %s", type(exc).__name__, exc,
+                exc_info=True,
+            )
             return [clamp_probability(self.fallback_score)] * len(chunk_groups)
 
     def manifest(self, manifest_path: str | Path = "config/manifest.json") -> dict[str, Any]:

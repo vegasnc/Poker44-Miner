@@ -59,8 +59,8 @@ class FPRConstrainedCalibrator:
 
         best_ap, best_bias, best_temp = -1.0, 0.0, 1.0
 
-        for bias in np.linspace(-2.0, 2.0, 17):
-            for temp in np.linspace(0.4, 2.5, 15):
+        for bias in np.linspace(-6.0, 2.0, 33):
+            for temp in np.linspace(0.3, 3.0, 19):
                 scores = 1.0 / (1.0 + np.exp(-((logit_raw + bias) / temp)))
                 preds = (scores >= self.threshold).astype(int)
                 if human_mask.sum() > 0:
@@ -70,6 +70,16 @@ class FPRConstrainedCalibrator:
                 ap = average_precision_score(y, scores)
                 if ap > best_ap:
                     best_ap, best_bias, best_temp = ap, bias, temp
+
+        # If the chosen calibration pushes ALL scores below threshold (no bot predictions),
+        # fall back to identity so the natural ISO separation still works.
+        if best_bias != 0.0 or best_temp != 1.0:
+            eps = 1e-6
+            raw_c = np.clip(raw, eps, 1 - eps)
+            logit_raw = np.log(raw_c / (1 - raw_c))
+            check_scores = 1.0 / (1.0 + np.exp(-((logit_raw + best_bias) / best_temp)))
+            if (check_scores >= self.threshold).sum() == 0:
+                best_bias, best_temp = 0.0, 1.0
 
         self.bias_ = best_bias
         self.temperature_ = best_temp

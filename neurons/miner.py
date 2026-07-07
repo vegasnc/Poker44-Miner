@@ -19,7 +19,11 @@ if str(REPO_ROOT) not in sys.path:
 
 from miners.custom_miner import Poker44BotDetectionMiner
 from src.utils.helpers import load_json
-from src.utils.synapse_logger import SynapseTracker, configure as configure_synapse_logger
+from src.utils.synapse_logger import (
+    SynapseTracker,
+    configure as configure_synapse_logger,
+    install_axon_http_logging,
+)
 
 LOGGER = logging.getLogger(__name__)
 LOG_FILE_HANDLE: Any = None
@@ -68,7 +72,16 @@ def configure_project_logging() -> Path:
 
     log_level = getattr(logging, os.getenv("POKER44_LOG_LEVEL", "INFO").upper(), logging.INFO)
     log_file = log_dir / "poker44-miner.log"
-    formatter = logging.Formatter(
+
+    import datetime as _dt
+    _UTC8 = _dt.timezone(_dt.timedelta(hours=-8))
+
+    class _UTC8Formatter(logging.Formatter):
+        def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:
+            ct = _dt.datetime.fromtimestamp(record.created, tz=_UTC8)
+            return ct.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+
+    formatter = _UTC8Formatter(
         "%(asctime)s %(levelname)s [%(name)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
@@ -84,6 +97,18 @@ def configure_project_logging() -> Path:
         file_handler.setFormatter(formatter)
         root_logger.addHandler(file_handler)
 
+    # Attach FileHandler directly to LOGGER so bt.logging resetting root to WARNING
+    # doesn't silence miner's own INFO messages (e.g. "Serving miner axon").
+    if not any(
+        isinstance(handler, logging.FileHandler) and Path(handler.baseFilename) == log_file
+        for handler in LOGGER.handlers
+    ):
+        miner_fh = logging.FileHandler(log_file, encoding="utf-8")
+        miner_fh.setLevel(log_level)
+        miner_fh.setFormatter(formatter)
+        LOGGER.addHandler(miner_fh)
+    LOGGER.setLevel(log_level)
+
     if os.getenv("POKER44_LOG_TEE_STDIO", "1").lower() in {"1", "true", "yes", "on"}:
         if not isinstance(sys.stdout, TeeStream) and not isinstance(sys.stderr, TeeStream):
             LOG_FILE_HANDLE = log_file.open("a", encoding="utf-8", buffering=1)
@@ -96,7 +121,7 @@ def configure_project_logging() -> Path:
 
     sys.excepthook = log_uncaught_exception
     logging.captureWarnings(True)
-    configure_synapse_logger()
+    configure_synapse_logger(log_dir)
     LOGGER.info("Project log recording enabled at %s", log_file)
     return log_file
 
@@ -149,6 +174,48 @@ else:
     POKER44_RUNTIME_AVAILABLE = BITTENSOR_RUNTIME_AVAILABLE and POKER44_BASE_AVAILABLE
 
 
+def _save_hard_chunks(
+    chunks: list,
+    risk_scores: list,
+    predictions: list,
+    threshold: float,
+) -> None:
+    """Save raw chunks from hard-regime batches (mean < 0.85) for Hard-Case Model training.
+
+    Called in a daemon thread — never raises, never blocks inference.
+    Chunks predicted as human (score < threshold) saved with label=0,
+    predicted as bot (score >= threshold) saved with label=1.
+    Files land in data/hard_regime/ with one JSON per batch, named by UTC timestamp.
+    """
+    import json as _json, datetime as _dt, pathlib as _pl
+    try:
+        out_dir = _pl.Path(__file__).resolve().parents[1] / "data" / "hard_regime"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        ts = _dt.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        mean_score = sum(risk_scores) / len(risk_scores)
+        n_human = sum(1 for p in predictions if not p)
+        records = []
+        for chunk, score, pred in zip(chunks, risk_scores, predictions):
+            records.append({
+                "label": 0 if not pred else 1,
+                "score": round(score, 4),
+                "chunk": chunk,
+            })
+        payload = {
+            "saved_at": ts,
+            "batch_mean": round(mean_score, 4),
+            "threshold": round(threshold, 4),
+            "n_chunks": len(chunks),
+            "n_human": n_human,
+            "n_bot": len(chunks) - n_human,
+            "chunks": records,
+        }
+        out_file = out_dir / f"hard_{ts}.json"
+        out_file.write_text(_json.dumps(payload, default=str))
+    except Exception:
+        pass  # never affect live inference
+
+
 class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
     """Model-backed Poker44 miner.
 
@@ -159,6 +226,7 @@ class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
     def __init__(self, config: Any = None):
         if POKER44_RUNTIME_AVAILABLE:
             super(Miner, self).__init__(config=config)
+            install_axon_http_logging(self.axon)
         elif BITTENSOR_RUNTIME_AVAILABLE:
             self._init_direct_bittensor(config=config)
 
@@ -176,16 +244,44 @@ class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
         tracker = SynapseTracker(synapse)
         chunks = getattr(synapse, "chunks", None) or []
         tracker.log_received(len(chunks))
+
+        # One-time dump of raw synapse for inspection
+        import json as _json
+        _dump = Path(__file__).resolve().parents[1] / "logs" / "synapse_dump.json"
+        if not _dump.exists() and chunks:
+            try:
+                _data = {
+                    "chunk_count": len(chunks),
+                    "hands_per_chunk": [len(c) for c in chunks[:3]],
+                    "sample_chunk_0_hand_0": chunks[0][0] if chunks[0] else None,
+                    "sample_chunk_0_hand_1": chunks[0][1] if len(chunks[0]) > 1 else None,
+                    "synapse_fields": [f for f in dir(synapse) if not f.startswith("_")],
+                }
+                _dump.write_text(_json.dumps(_data, indent=2, default=str))
+                LOGGER.info("Synapse dump saved to %s", _dump)
+            except Exception:
+                pass
         try:
             result = self.detector.pipeline.score_synapse_chunks(chunks)
             risk_scores: list[float] = result["risk_scores"]
             predictions: list[bool] = result["predictions"]
             latency_ms: float = result.get("inference_latency_ms", 0.0)
-            tracker.log_inference(risk_scores, predictions, latency_ms)
+            threshold_used: float = result.get("threshold_used", 0.5)
+            tracker.log_inference(risk_scores, predictions, latency_ms, threshold=threshold_used)
             synapse.risk_scores = risk_scores
             synapse.predictions = predictions
             synapse.model_manifest = dict(self.model_manifest)
             tracker.log_response(risk_scores, predictions)
+            # Save raw chunks from hard-regime batches (mean < 0.85) for Hard-Case Model training.
+            # Runs in a fire-and-forget thread — zero impact on latency or inference result.
+            raw_mean = result.get("raw_scores_mean", sum(risk_scores) / len(risk_scores) if risk_scores else 1.0)
+            if risk_scores and raw_mean < 0.85:
+                import threading as _thr
+                _thr.Thread(
+                    target=_save_hard_chunks,
+                    args=(chunks, risk_scores, predictions, threshold_used),
+                    daemon=True,
+                ).start()
         except Exception as exc:
             tracker.log_error(exc)
             LOGGER.exception("forward() failed; returning neutral scores")
@@ -227,6 +323,7 @@ class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
         self.metagraph = self.subtensor.metagraph(self.config.netuid)
         self.uid = _registered_uid(self.metagraph, self.wallet.hotkey.ss58_address)
         self.axon = bt.Axon(wallet=self.wallet, config=self.config)
+        install_axon_http_logging(self.axon)
         self.axon.attach(
             forward_fn=self.forward,
             blacklist_fn=self.blacklist,
@@ -311,9 +408,21 @@ class Miner(BaseMinerNeuron):  # type: ignore[misc, valid-type]
         self.axon.serve(netuid=self.config.netuid, subtensor=self.subtensor)
         self.axon.start()
         self._log("info", f"Miner running with UID: {self.uid}")
+        # Re-register axon every ~100 blocks (~20 min) to keep active=1 on metagraph
+        _SERVE_INTERVAL_BLOCKS = 100
+        _last_serve_block = self.subtensor.block
         try:
             while not self.should_exit:
-                time.sleep(5 * 60)
+                time.sleep(60)
+                try:
+                    current_block = self.subtensor.block
+                    if current_block - _last_serve_block >= _SERVE_INTERVAL_BLOCKS:
+                        self.metagraph.sync(subtensor=self.subtensor)
+                        self.axon.serve(netuid=self.config.netuid, subtensor=self.subtensor)
+                        _last_serve_block = current_block
+                        self._log("info", f"Axon re-registered at block {current_block}")
+                except Exception as _e:
+                    self._log("warning", f"Periodic re-registration failed: {_e}")
         except KeyboardInterrupt:
             self.axon.stop()
             self._log("success", "Miner killed by keyboard interrupt.")

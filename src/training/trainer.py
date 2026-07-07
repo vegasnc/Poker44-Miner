@@ -40,6 +40,30 @@ class TrainingPipeline:
             raise ValueError("No benchmark examples were loaded")
 
         train_examples, valid_examples, test_examples = split_by_release(examples)
+
+        # Augment training set with 100-hand concatenated chunks (matches live validator data)
+        import logging as _log
+        augment_cfg = self.config.get("augmentation", {})
+        if augment_cfg.get("enabled", True):
+            n_aug = int(augment_cfg.get("n_chunks_per_class", 200))
+            target_hands = int(augment_cfg.get("target_hands", 100))
+            aug_examples = _augment_concatenated_chunks(list(train_examples), n_aug, target_hands, seed=int(training_config.get("random_seed", 42)))
+            train_examples = list(train_examples) + aug_examples
+            _log.getLogger(__name__).info(
+                "Concat augmentation: +%d 100-hand chunks (total train=%d)",
+                len(aug_examples), len(train_examples),
+            )
+
+        # Optionally augment training set with synthetic data
+        synthetic_cfg = self.config.get("synthetic", {})
+        if synthetic_cfg.get("enabled", False):
+            syn_examples = _load_synthetic_examples(synthetic_cfg)
+            train_examples = list(train_examples) + syn_examples
+            _log.getLogger(__name__).info(
+                "Synthetic augmentation: +%d examples (total train=%d)",
+                len(syn_examples), len(train_examples),
+            )
+
         feature_pipeline = FeaturePipeline(config=self.config)
         x_train = feature_pipeline.fit_transform([example.chunk for example in train_examples])
         y_train = np.asarray([example.label for example in train_examples], dtype=int)
@@ -96,16 +120,34 @@ class TrainingPipeline:
         }
 
     def _latest_dates(self, client: BenchmarkClient, minimum: int) -> list[str]:
+        import datetime as _dt
         data_config = self.config.get("data", {})
         start_date = data_config.get("start_date")
         end_date = data_config.get("end_date")
         releases = client.releases(limit=120)
         dates = [release["sourceDate"] for release in releases if release.get("sourceDate")]
+
+        # The releases endpoint may lag a few days — probe recent dates directly
+        today = _dt.date.today()
+        latest_known = _dt.date.fromisoformat(max(dates)) if dates else today - _dt.timedelta(days=7)
+        probe_start = latest_known + _dt.timedelta(days=1)
+        probe_end = _dt.date.fromisoformat(end_date) if end_date else today
+        probe_day = probe_start
+        while probe_day <= probe_end:
+            d_str = probe_day.isoformat()
+            try:
+                probe_records = client.chunks(source_date=d_str, limit=2, use_cache=False)
+                if probe_records:
+                    dates.append(d_str)
+            except Exception:
+                pass
+            probe_day += _dt.timedelta(days=1)
+
         if start_date:
             dates = [d for d in dates if d >= start_date]
         if end_date:
             dates = [d for d in dates if d <= end_date]
-        dates = sorted(dates)
+        dates = sorted(set(dates))
         if len(dates) < minimum:
             raise ValueError(f"Need at least {minimum} benchmark releases, found {len(dates)}")
         return dates
@@ -131,6 +173,79 @@ class TrainingPipeline:
             f"https://api.poker44.net/api/v1/benchmark/chunks?sourceDate={date}" for date in dates
         ]
         save_json(self.manifest_path, manifest)
+
+
+def _augment_concatenated_chunks(
+    examples: list[DatasetExample],
+    n_per_class: int = 200,
+    target_hands: int = 100,
+    seed: int = 42,
+) -> list[DatasetExample]:
+    """Create larger chunks by concatenating real same-label chunks.
+
+    Live validators send 80-100 hands per chunk; benchmark chunks have 30-40.
+
+    HUMAN strategy — same-source: pick ONE player's chunk and extend it by
+    shuffling their own hands. This simulates a real single-player session
+    (consistent style, low inter-player variance). Previously, mixing hands from
+    different human players created artificially high variance that the model
+    learned as a "human signal", causing live single-player humans (lower
+    variance) to look like bots at inference time.
+
+    BOT strategy — cross-source: bots all implement GTO, so mixing chunks from
+    different bots does not inflate variance artificially. Cross-source
+    concatenation gives more hand diversity for robust bot feature learning.
+    """
+    import random as _rnd
+    rng = _rnd.Random(seed)
+
+    bot_pool = [ex for ex in examples if ex.label == 1]
+    human_pool = [ex for ex in examples if ex.label == 0]
+    augmented: list[DatasetExample] = []
+
+    for label, pool in [(1, bot_pool), (0, human_pool)]:
+        if not pool:
+            continue
+        for _ in range(n_per_class):
+            combined: list[Any] = []
+            if label == 0:
+                # Human: same-source (single player, shuffle own hands to reach target)
+                src_chunk = rng.choice(pool).chunk
+                while len(combined) < target_hands:
+                    shuffled = list(src_chunk)
+                    rng.shuffle(shuffled)
+                    combined.extend(shuffled)
+            else:
+                # Bot: cross-source (GTO-consistent across bots, more diversity)
+                while len(combined) < target_hands:
+                    src = rng.choice(pool).chunk
+                    combined.extend(src)
+            augmented.append(DatasetExample(
+                chunk=combined[:target_hands],
+                label=label,
+                source_date="augmented",
+                split="train",
+            ))
+
+    return augmented
+
+
+def _load_synthetic_examples(synthetic_cfg: dict[str, Any]) -> list[DatasetExample]:
+    """Generate synthetic DatasetExamples using the probabilistic simulator."""
+    from src.data.synthetic import generate_synthetic_dataset
+    n_per_class = int(synthetic_cfg.get("n_chunks_per_class", 200))
+    n_hands = int(synthetic_cfg.get("n_hands_per_chunk", 35))
+    seed = int(synthetic_cfg.get("seed", 123))
+    records = generate_synthetic_dataset(n_chunks_per_class=n_per_class, n_hands_per_chunk=n_hands, seed=seed)
+    return [
+        DatasetExample(
+            chunk=r["chunk"],
+            label=int(r["label"]),
+            source_date="synthetic",
+            split="train",
+        )
+        for r in records
+    ]
 
 
 def _extract_matrices(examples: list[DatasetExample]) -> list[np.ndarray]:

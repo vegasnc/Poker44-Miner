@@ -16,6 +16,7 @@ from src.features.behavioral import (
 from src.features.advanced_tells import extract_advanced_tell_features
 from src.features.gto_tells import extract_gto_tell_features
 from src.features.bot_tells import extract_bot_tell_features
+from src.features.gto_engine_features import extract_gto_engine_features
 from src.features.per_hand import extract_per_hand_features
 from src.features.statistical import extract_statistical_features
 from src.utils.helpers import load_json, save_json
@@ -49,9 +50,38 @@ class FeaturePipeline:
             features.update(extract_advanced_tell_features(normalized))
         if enabled.get("gto_tell_features", True):
             features.update(extract_gto_tell_features(normalized))
+        if enabled.get("gto_engine_features", True):
+            features.update(extract_gto_engine_features(normalized))
 
         if not features:
             features["hand_count"] = float(len(normalized))
+
+        # Normalize cumulative count features by hand count to create per-hand rates.
+        # Live validator sends 100 hands/chunk vs 30-40 in benchmark — without this,
+        # raw counts are ~2.5x higher in live data, causing everything to look "bot-like".
+        # Normalize any feature containing "count" (cumulative totals), ending in "_hands"
+        # (position/situation hand tallies), or matching other known cumulative patterns.
+        # ph_* features are already per-hand aggregates and must NOT be normalized again.
+        n_hands = float(max(1, len(normalized)))
+        # Features that contain "count" but are already per-hand means/stds:
+        # mean_player_count, std_street_count, etc. → skip via prefix check.
+        # ph_* features are per-hand aggregates, mean_/std_ features are per-hand stats.
+        _SKIP_PREFIXES = ("ph_", "mean_", "std_")
+        _SKIP_EXACT = {"hand_count"}
+        # ph_chunk_unique_raise_to is a per-chunk cumulative count despite the ph_ prefix
+        _PH_EXCEPTIONS = {"ph_chunk_unique_raise_to"}
+        # Additional cumulative patterns that don't contain "count" in their name
+        _CUMULATIVE_PATTERNS = ("_hands", "_opportunities", "_bets_faced_by_villain",
+                                "_postflop_faced_aggression")
+        for key in list(features.keys()):
+            if key in _SKIP_EXACT:
+                continue
+            if key in _PH_EXCEPTIONS or (
+                "count" in key or any(p in key for p in _CUMULATIVE_PATTERNS)
+            ):
+                if not any(key.startswith(p) for p in _SKIP_PREFIXES) or key in _PH_EXCEPTIONS:
+                    features[key] = features[key] / n_hands
+
         return {key: _finite(value) for key, value in features.items()}
 
     def transform(self, chunk_groups: list[Any], fit: bool = False) -> pd.DataFrame:

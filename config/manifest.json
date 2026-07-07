@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "52df004e51cd1b6a92608a42593eda951e06b3402832ddf49fd8f64faf98abc3",
+  "artifact_sha256": "ef026e9b7adf543891dfb2c4c484fb9aa8da0906041516c7c289a46bcbc6d55d",
   "artifact_url": "https://github.com/vegasnc/Poker44-Miner/releases/v1.0.0/model.joblib",
   "data_attestation": "All training data is from official Poker44 public benchmark",
   "framework": "lightgbm",
@@ -12,7 +12,7 @@
     "src/features/engineering.py",
     "src/models/baseline.py"
   ],
-  "implementation_sha256": "2f9397185c0f58b60b5e062d6f4bad3669109fc23af2375f79b0cef5e21ffa8d",
+  "implementation_sha256": "d9be783b12f303074e6d5bfc175f6ce654cf43effe4cc5891c6600c720eb75e0",
   "inference_mode": "batch",
   "license": "MIT",
   "model_card_url": "https://github.com/vegasnc/Poker44-Miner/blob/main/model_card.md",
@@ -21,7 +21,7 @@
   "notes": "Baseline LightGBM model with engineered behavioral features.",
   "open_source": true,
   "private_data_attestation": "No private or proprietary data used in training",
-  "repo_commit": "71a840d4fe0b2e1c38631627a44337b3bcb4c1c3",
+  "repo_commit": "486cc5af73f0165c65f47e4e5b5a1fa7c46beddc",
   "repo_url": "https://github.com/vegasnc/Poker44-Miner",
   "schema_version": "1.0",
   "training_data_sources": [
@@ -54,7 +54,15 @@
     "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-21",
     "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-22",
     "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-23",
-    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-24"
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-24",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-25",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-26",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-27",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-28",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-29",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-06-30",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-07-01",
+    "https://api.poker44.net/api/v1/benchmark/chunks?sourceDate=2026-07-02"
   ],
-  "training_data_statement": "Trained on Poker44 public benchmark releases from 2026-05-26 to 2026-06-24"
+  "training_data_statement": "Trained on Poker44 public benchmark releases from 2026-05-26 to 2026-07-02"
 }
